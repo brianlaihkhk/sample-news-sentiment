@@ -20,11 +20,10 @@ class Database:
 
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         if (os.environ['RDS_DB_TYPE'].upper() == "MYSQL"):
-            app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://" + db_username + ":" + db_password + "@" + db_url + "/" + db_target
+            app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://" + db_username + ":" + db_password + "@" + db_url + "/" + db_target + "?charset=utf8"
         elif (os.environ['RDS_DB_TYPE'].upper() == "REDSHIFT"):
             app.config['SQLALCHEMY_DATABASE_URI'] = "redshift+psycopg2://" + db_username + ":" + db_password + "@" + db_url + "/" + db_target
         else:
             raise Exception("Missing RDS_DB_TYPE, only MYSQL or REDSHIFT is allowed")
 
-        print(app.config['SQLALCHEMY_DATABASE_URI'])
         self.db = SQLAlchemy(app)

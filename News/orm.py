@@ -5,8 +5,9 @@ class News(db.Model):
 
     NEWS_UUID = db.Column(db.String, primary_key=True)
     NEWS_DAY = db.Column(db.String, nullable=False)
-    NEWS_TITLE = db.Column(db.String, nullable=False)
-    NEWS_CONTEXT = db.Column(db.String, nullable=False)
+    NEWS_TITLE = db.Column(db.String, nullable=False, convert_unicode=True)
+    NEWS_CONTEXT = db.Column(db.String, nullable=False, convert_unicode=True)
+    RATING = db.Column(db.Integer, nullable=False)
 
     def __init__(self, news_day, tag, news_count):
         self.NEWS_UUID = news_day

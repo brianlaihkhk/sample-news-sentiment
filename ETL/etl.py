@@ -2,8 +2,9 @@ from analysis import Analysis
 import time
 
 class Etl:
-    def __init__(self, news_date, context, category):
-        self.title = ' '.join(context[0]).strip()
+    def __init__(self, news_path, news_date, context, category):
+        self.path = news_path
+        self.title = context[0]
         self.news_date = news_date
         self.context = ' '.join(context[1:]).replace('\n', ' ').strip()
         self.analysis = Analysis(self.context, category)
@@ -22,7 +23,7 @@ class Aggregate:
     def aggregate_category (self, etl_list):
         aggregate_category_list = {}
         for etl in etl_list:
-            week_day = time.strftime("%A", time.strptime(etl.news_date, "%Y%m%d"))
+            week_day = time.strftime("%a", time.strptime(etl.news_date, "%Y%m%d"))
             key = (etl.news_date, week_day, etl.category)
             if (aggregate_category_list.get(key) == None):
                 aggregate_category_list[key] = 1
@@ -33,7 +34,7 @@ class Aggregate:
     def aggregate_sentiment (self, etl_list):
         aggregate_sentiment_list = {}
         for etl in etl_list:
-            week_day = time.strftime("%A", time.strptime(etl.news_date, "%Y%m%d"))
+            week_day = time.strftime("%a", time.strptime(etl.news_date, "%Y%m%d"))
             key = (etl.news_date, week_day, etl.sentiment)
             if (aggregate_sentiment_list.get(key) == None):
                 aggregate_sentiment_list[key] = 1
@@ -45,7 +46,7 @@ class Aggregate:
         aggregate_topic_list = {}
         for etl in etl_list:
             for topic in etl.topic:
-                week_day = time.strftime("%A", time.strptime(etl.news_date, "%Y%m%d"))
+                week_day = time.strftime("%a", time.strptime(etl.news_date, "%Y%m%d"))
                 key = (etl.news_date, week_day, topic)
                 if (aggregate_topic_list.get(key) == None):
                     aggregate_topic_list[key] = 1
@@ -57,7 +58,7 @@ class Aggregate:
         aggregate_tag_list = {}
         for etl in etl_list:
             for tag in etl.tags:
-                week_day = time.strftime("%A", time.strptime(etl.news_date, "%Y%m%d"))
+                week_day = time.strftime("%a", time.strptime(etl.news_date, "%Y%m%d"))
                 key = (etl.news_date, week_day, tag)
                 if (aggregate_tag_list.get(key) == None):
                     aggregate_tag_list[key] = 1

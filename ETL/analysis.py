@@ -2,6 +2,9 @@ from textblob import TextBlob
 from textblob.sentiments import NaiveBayesAnalyzer
 from textblob.np_extractors import ConllExtractor
 import itertools
+import re
+
+regex = '[^a-zA-Z \n\.]'
 
 class Analysis:
 
@@ -14,26 +17,26 @@ class Analysis:
         if abs(sentiment.p_pos - sentiment.p_neg) <= 0.2:
             return "neu"
         else :
-            return sentiment.classification
+            return str(sentiment.classification)
 
     def get_topic(self):
-        output_topic = [ topic for topic in self.blob.noun_phrases if self.filter_topic(topic) is not None ]
-        return output_topic
+        merged_topic = [ phrases.split(' ') for phrases in self.blob.noun_phrases ]
+        filter_topic = self.filter_topic(list(itertools.chain(*merged_topic)))
+        output_topic = [ re.sub(regex, '', topic.lower()) for topic in filter_topic ]
+        return set(output_topic)
         
-    def filter_topic (self, topic):
-        noun_phrase = ' '.join(topic)
-        if ' ' in noun_phrase and len(noun_phrase) > 8:
-            return noun_phrase
-        else:
-            return None
+    def filter_topic (self, merged_topic):
+        print(merged_topic)
+        return sorted(set([i for i in merged_topic if merged_topic.count(i) > 3]))
+
 
     def get_category(self):
-        return self.category
+        return str(self.category).lower()
 
     def get_tags(self):
-        filter_tags = [ tag for tag in list(itertools.starmap(self.filter_tag, self.blob.tags)) if tag is not None ]
-        output_tags = [ tag for tag in filter_tags if self.blob.words.count(tag) >= 3 ]
-        return output_tags
+        filter_tags = [ str(tag).lower() for tag in list(itertools.starmap(self.filter_tag, self.blob.tags)) if tag is not None ]
+        output_tags = [ re.sub(regex, '', tag) for tag in filter_tags if self.blob.words.count(tag) >= 3 ]
+        return set(output_tags)
 
     def filter_tag(self, tag, type):
         if type == 'NNP' and len(tag) > 5:

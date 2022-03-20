@@ -18,7 +18,7 @@ db_target = os.environ['RDS_DEFAULT_DB']
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 if (os.environ['RDS_DB_TYPE'].upper() == "MYSQL"):
-    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://" + db_username + ":" + db_password + "@" + db_url + "/" + db_target
+    app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://" + db_username + ":" + db_password + "@" + db_url + "/" + db_target + "?charset=utf8"
 elif (os.environ['RDS_DB_TYPE'].upper() == "REDSHIFT"):
     app.config['SQLALCHEMY_DATABASE_URI'] = "redshift+psycopg2://" + db_username + ":" + db_password + "@" + db_url + "/" + db_target
 else:
