@@ -1,13 +1,16 @@
 from analysis import Analysis
 import time
+import re
+
+regex = '[^a-zA-Z \n\.]'
 
 class Etl:
     def __init__(self, news_path, news_date, context, category):
         self.path = news_path
-        self.title = context[0]
+        self.title = re.sub(regex, '', context[0]).strip()
         self.news_date = news_date
         self.week_day = time.strftime("%a", time.strptime(self.news_date, "%Y%m%d"))
-        self.context = ' '.join(context[1:]).replace('\n', ' ').strip()
+        self.context = re.sub(regex, '', ''.join(context[1:])).strip()
         self.analysis = Analysis(self.context, category)
         self.sentiment = self.analysis.sentiment
         self.topic = self.analysis.topic

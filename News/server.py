@@ -79,20 +79,26 @@ class LocalServerRouter(BaseHTTPRequestHandler):
         self.wfile.write(return_response["body"].encode())
 
     def handle_date(self, day_string):
-        filter = { 'WEEK_DAY' : '%', 'DATE' : '%'}
+        filter = {}
 
         week_data = day_string.split('-')
 
         if len(week_data) == 4 and str(week_data[0]):
             filter['WEEK_DAY'] = week_data[0]
 
-        if len(week_data) == 4 and str(week_data[3]):
+        if len(week_data) == 4 and str(week_data[3]) and str(week_data[2]) and str(week_data[1]):
             filter['DATE'] = str(week_data[1]) + str(week_data[2]) + str(week_data[3])
-        elif len(week_data) == 4 and str(week_data[2]):
+            filter['YEAR'] = str(week_data[1])
+            filter['MONTH'] = str(week_data[2])
+            filter['DAY'] = str(week_data[3])
+        elif len(week_data) == 4 and str(week_data[2]) and str(week_data[1]):
             filter['DATE'] = str(week_data[1]) + str(week_data[2]) + "%"
+            filter['YEAR'] = str(week_data[1])
+            filter['MONTH'] = str(week_data[2])
         elif len(week_data) == 4 and str(week_data[1]):
             filter['DATE'] = str(week_data[1]) + "%"
-        elif len(week_data) == 4:
+            filter['YEAR'] = str(week_data[1])
+        elif len(week_data) == 4 and not str(week_data[3]) and not str(week_data[2]) and not str(week_data[1]) :
             filter['DATE'] = "%"
         else :
             raise Exception('Unsupported date query format')
@@ -101,12 +107,12 @@ class LocalServerRouter(BaseHTTPRequestHandler):
 
     def handle_query(self, path, key):
         path_data = path.split('/')[1:]
-        if len(path_data) == 3:
+        if len(path_data) >= 3:
             query = {key : path_data[2] if path_data[2] else '%' }
             query.update(self.handle_date(path_data[1]))
             print(query)
             return query 
-        elif len(path_data) == 2:
+        elif len(path_data) >= 2:
             query = {key : '%'}
             query.update(self.handle_date(path_data[1]))
             return query 
@@ -116,10 +122,10 @@ class LocalServerRouter(BaseHTTPRequestHandler):
     def handle_news(self, path):
         path_data = path.split('/')[1:]
         print(str(path_data))
-        if len(path_data) == 3:
+        if len(path_data) >= 3 and path_data[1] and path_data[2]:
             query = {'CATEGORY' : path_data[1], 'NEWS_UUID' : path_data[2]}
             return query 
-        elif len(path_data) == 2:
+        elif len(path_data) >= 2 and path_data[1]:
             query = {'CATEGORY' : path_data[1]}
             return query
         return {}
