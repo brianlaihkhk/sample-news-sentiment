@@ -69,20 +69,27 @@ class AggregateTag(Base):
         self.NEWS_COUNT = news_count
         self.POPULARITY = 0
 
+
 class News(Base):
     __tablename__ = 'NEWS'
 
     NEWS_UUID = Column(String, primary_key=True)
     NEWS_DAY = Column(String, nullable=False)
+    DAY_OF_WEEK = Column(String, nullable=False)
     NEWS_TITLE = Column(String, nullable=False)
+    CATEGORY = Column(String, nullable=False)
     NEWS_CONTEXT = Column(LONGTEXT, nullable=False)
+    POPULARITY = Column(Integer, nullable=False)
     RATING = Column(Integer, nullable=False)
 
-    def __init__(self, news_uuid, news_day, title, context):
+    def __init__(self, news_uuid, news_day, week_day, title, context, category):
         self.NEWS_UUID = news_uuid
+        self.DAY_OF_WEEK = week_day
         self.NEWS_DAY = news_day
         self.NEWS_TITLE = title
         self.NEWS_CONTEXT = context
+        self.CATEGORY = category
+        self.POPULARITY = 0
         self.RATING = 0
 
 class NewsMap(Base):
@@ -97,3 +104,21 @@ class NewsMap(Base):
         self.NEWS_UUID = news_uuid
         self.NEWS_METADATA_KEY = news_metadata_key
         self.NEWS_METADATA_VALUE = news_metadata_value
+
+class AggregateInteraction(Base):
+    __tablename__ = 'AGGREGATE_INTERACTION'
+
+    INTERACTION_DAY = Column(String, primary_key=True)
+    DAY_OF_WEEK = Column(String, nullable=False)
+    NEWS_METADATA_KEY = Column(String, nullable=False)
+    NEWS_METADATA_VALUE = Column(String, nullable=False)
+    PREVIOUS_METADATA_VALUE = Column(String, nullable=False)
+    INTERACTION_COUNT = Column(String, nullable=False)
+
+    def __init__(self, news_day, week_day, news_metadata_key, news_metadata_value, pervious_metadata_value):
+        self.INTERACTION_DAY = news_day
+        self.DAY_OF_WEEK = week_day
+        self.NEWS_METADATA_KEY = news_metadata_key
+        self.NEWS_METADATA_VALUE = news_metadata_value
+        self.PREVIOUS_METADATA_VALUE = pervious_metadata_value
+        self.INTERACTION_COUNT = 0
