@@ -21,7 +21,7 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 ### Framework 
 
 - TextBlob
-   - Text-classification ML algorithm : Naive Bayes
+   - Text-classification ML model : Naive Bayes
    - NN / NNP extractor : Conll Extractor
 - sqlAlchemy
 - Flask
