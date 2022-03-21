@@ -1,11 +1,12 @@
-# Coding assessment
-Coding assessment - News sentiment - Submitted by Brian Lai
+# Coding sample
+Coding sample - News sentiment analysis - Submitted by Brian Lai
 
 ### Features
 
-- OLAP data structure design for BI analysis / reporting
+- OLAP data structure design
 - Client UI / Backend for reporting illustration
-- Text mining, sentiment mining based on news context
+- Text mining, word sentiment mining based on news context
+- Sentiment / metadata aggregation for BI analysis / reporting
 - Provide popularity, topics, tags for user to select based on their interested area
 - Flexibility on aggregated data roll-up / drill-down based on multiple dimensions (year / month / day / weekday / tag / category / sentiment / topic)
 - User is able to search, obtain single piece of news and visualize metadata association
@@ -23,8 +24,8 @@ Coding assessment - News sentiment - Submitted by Brian Lai
 - ETL : ETL script to extract massaged news, generate metadata, aggregate data for OLAP
 - Documentation : Documentation
 - Deploy : Deployment script
-- News : Backend server for data analysis / BI illustration
-- Client : Frontend UI for data analysis / BI illustration
+- News : Backend server for sentiment analysis / BI illustration
+- Client : Frontend UI for sentiment analysis / BI illustration
 - Tools : Tools for encryption, encoding and local server script for testing
 - Setup : Setup script for database initialization
 
