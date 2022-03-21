@@ -9,25 +9,11 @@ from flask import Flask, request
 from flask_cors import CORS
 from handler import Handler
 from db import Database
-from interaction import Interaction
 import logging
 
 app = Flask(__name__)
 CORS(app)
 request_handler = None
-
-@app.route('/suggest', methods=['GET'])
-def suggest():
-    try:
-        query = request_handler.handle_news(None, None)
-        logging.info(query)
-        print(query)
-        return response.success(request_handler.query.get_news(query))
-    except Exception as e:
-        print(traceback.format_exc())
-        logging.error(str(traceback.format_exc()))
-        return response.failure("Request failed. " + str(e))
-
 
 @app.route('/news', methods=['GET'])
 @app.route('/news/', methods=['GET'])

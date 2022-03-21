@@ -1,5 +1,5 @@
 import response
-from orm import AggregateCategory, AggregateSentiment, AggregateTopic, AggregateTag, AggregateInteraction, News, NewsMap
+from orm import AggregateCategory, AggregateSentiment, AggregateTopic, AggregateTag, News, NewsMap
 from sqlalchemy import or_, and_, func, text
 
 class Query:
@@ -58,23 +58,12 @@ class Query:
 
         return [ dict(zip(query_parameter.get('key'), row)) for row in news_result]
 
-    def update_category_count(self, category_list):
-        for category in category_list:
-            category.POPULARITY += 1
-        self.db_connection.session.commit()
-
     def get_category(self, criteria) :
         query_parameter = self.get_metadata_parameter(criteria, AggregateCategory, AggregateCategory.CATEGORY, 'category')
 
         category_result = self.db_connection.session.query(AggregateCategory).with_entities(*query_parameter.get('with_entities')).filter(and_(*query_parameter.get('filter'))).group_by(*query_parameter.get('group_by')).order_by(*query_parameter.get('order_by')).limit(self.query_limit).all()
 
         return [ dict(zip(query_parameter.get('key'), row)) for row in category_result]
-
-    def update_topic_count(self, topic_list):
-        for topic in topic_list:
-            topic.POPULARITY += 1
-        self.db_connection.session.commit()
-
 
     def get_topic(self, criteria) :
         query_parameter = self.get_metadata_parameter(criteria, AggregateTopic, AggregateTopic.TOPIC, 'topic')
@@ -83,23 +72,12 @@ class Query:
 
         return [ dict(zip(query_parameter.get('key'), row)) for row in topic_result]
 
-    def update_tag_count(self, tag_list):
-        for tag in tag_list:
-            tag.POPULARITY += 1
-        self.db_connection.session.commit()
-
     def get_tag(self, criteria) :
         query_parameter = self.get_metadata_parameter(criteria, AggregateTag, AggregateTag.TAG, 'tag')
 
         tag_result = self.db_connection.session.query(AggregateTag).with_entities(*query_parameter.get('with_entities')).filter(and_(*query_parameter.get('filter'))).group_by(*query_parameter.get('group_by')).order_by(*query_parameter.get('order_by')).limit(self.query_limit).all()
 
         return [ dict(zip(query_parameter.get('key'), row)) for row in tag_result]
-
-
-    def update_sentiment_count(self, sentiment_list):
-        for sentiment in sentiment_list:
-            sentiment.POPULARITY += 1
-        self.db_connection.session.commit()
 
     def get_sentiment(self, criteria) :
         query_parameter = self.get_metadata_parameter(criteria, AggregateSentiment, AggregateSentiment.SENTIMENT, 'sentiment')
@@ -131,11 +109,9 @@ class Query:
 
         if criteria.get('CATEGORY'):
             filter.append(orm_class.CATEGORY == criteria.get('CATEGORY'))
-            order_by.append(orm_class.POPULARITY.desc())
 
         if criteria.get('CATEGORY_LIST'):
             filter.append(orm_class.CATEGORY.in_(criteria.get('CATEGORY_LIST')))
-            order_by.append(orm_class.POPULARITY.desc())
 
         return { 'with_entities' : with_entities, 'filter' : filter, 'key' : key, 'order_by' : order_by }
 
@@ -187,10 +163,10 @@ class Query:
 
     def get_metadata_parameter (self, criteria, orm_class, base_column, base_key):
         group_by = []
-        with_entities = [ func.count(orm_class.POPULARITY).label('POPULARITY') ]
+        with_entities = []
         filter = []
-        order_by = [ text('POPULARITY desc') ]
-        key = ['popularity']
+        order_by = []
+        key = []
         require_base = True
 
         if criteria.get('DATE'):

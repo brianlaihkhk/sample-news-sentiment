@@ -95,7 +95,7 @@ class News(Base):
     DAY_OF_WEEK = Column(String, nullable=False)
     NEWS_TITLE = Column(String, nullable=False)
     CATEGORY = Column(String, nullable=False)
-    NEWS_ABSTRACT = Column(LONGTEXT, nullable=False)
+    NEWS_ABSTRACT = Column(String, nullable=False)
     NEWS_CONTEXT = Column(LONGTEXT, nullable=False)
 
     def __init__(self, news_uuid, news_day, week_day, title, context, category):
@@ -104,7 +104,7 @@ class News(Base):
         self.NEWS_DAY = news_day
         self.NEWS_TITLE = title
         self.NEWS_CONTEXT = context
-        self.NEWS_ABSTRACT = context.split(' ')[:30]
+        self.NEWS_ABSTRACT = ' '.join(context.split(' ')[:30])
         self.CATEGORY = category
 
 class NewsMap(Base):

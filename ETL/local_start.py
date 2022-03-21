@@ -141,7 +141,9 @@ class FileContext:
             try :
                 news_uuid = str(uuid.uuid4())
                 self.db_connection.session.add(News(news_uuid, news.news_date, news.week_day, news.title, news.context, news.category))
+                self.db_connection.session.commit()
                 self.db_connection.session.add(NewsMap(news_uuid, news.news_date, news.week_day, 'sentiment', news.sentiment))
+                self.db_connection.session.commit()
 
                 for topic in news.topic:
                     logging.info('topic : ' + str(topic))

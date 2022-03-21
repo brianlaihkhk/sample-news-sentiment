@@ -4,17 +4,25 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 ### Features
 
 - OLAP data structure design
-- Client UI / Backend for reporting illustration
-- Text mining, word sentiment mining based on news context
-- Sentiment / metadata aggregation for BI analysis / reporting
-- Provide popularity, topics, tags for user to select based on their interested area
-- Flexibility on aggregated data roll-up / drill-down based on multiple dimensions (year / month / day / weekday / tag / category / sentiment / topic)
-- User is able to search, obtain single piece of news and visualize metadata association
 - Support non-AWS setup or AWS setup
+
+- ETL
+-- Detect and scan news file. Provide delta / incremental scan feasibility using scanned file.
+
+- Data mining and analysis
+-- Text mining, word sentiment mining based on news context
+-- Sentiment / metadata aggregation for BI analysis / reporting 
+
+- Analysis visualization
+-- Provide popularity, topics, tags for user to select based on their interested area
+-- Flexibility on aggregated data roll-up / drill-down based on multiple dimensions (year / month / day / weekday / tag / category / sentiment / topic)
+-- User is able to search, obtain single piece of news and visualize metadata association
 
 ### Framework 
 
 - TextBlob
+-- Text-classification ML algorithm : Naive Bayes
+-- NN / NNP extractor : Conll Extractor
 - sqlAlchemy
 - Flask
 
@@ -36,16 +44,46 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 - [AWS solution]
    - AWS IAM (Permission setup)
    - AWS VPC (Network connection capability)
-   - AWS ECS / AWS EKS (or equivalent for Client + News module)
    - AWS S3
-   - AWS Glue
-   - AWS Redshift (OLAP for ETL and aggregated data)
    - AWS-cli or AWS CloudFormation
+
+   - For this project
+   -- AWS ECS / AWS EKS (or equivalent for docker hosting)
+
+   - For external BI reports
+   -- AWS Glue
+   -- AWS Redshift (For other BI reports integration)
 
 - [non-AWS solution]
    - Docker (for Client + News module)
    - MySQL / Oracle RDBMS (or other SQL database)
    - (Optional) Docker swarm, Kubernetes or equivalent 
+
+### URL request structure
+
+- For further information please refer to Documentation folder
+
+- News
+-- /news
+-- /news/<category>
+-- /news/<category>/<uuid>
+
+- Sentiment
+-- /topic
+-- /topic/<date>
+-- /topic/<date>/<topic>
+-- /category
+-- /category/<date>
+-- /category/<date>/<category>
+-- /tag
+-- /tag/<date>
+-- /tag/<date>/<category>
+-- /topic
+-- /topic/<date>
+-- /topic/<date>/<category>
+
+- Search
+-- /search
 
 ### Technical Assessment Requirement
 

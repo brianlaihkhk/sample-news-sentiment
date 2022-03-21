@@ -1,5 +1,4 @@
 from query import Query
-from interaction import Interaction
 from urllib.parse import urlparse
 import logging
 import os
@@ -9,7 +8,6 @@ class Handler():
     def __init__(self, db):
         self.application_prefix = os.environ['APPLICATION_PREFIX']
         self.query = Query(db)
-        self.interaction = Interaction(db)
 
     def handle_search (self, query_string):
         query = {}

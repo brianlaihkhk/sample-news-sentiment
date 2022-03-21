@@ -87,8 +87,6 @@ class App extends Component {
         <main className="container">
           <div class="header">
               <h1>Tutorial Republic</h1>
-          </div>
-          <div class="header">
               <h1>Tutorial Republic</h1>
           </div>
           <div class="wrapper clearfix">
