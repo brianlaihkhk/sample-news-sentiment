@@ -32,13 +32,14 @@ class Query:
     def get_news(self, criteria) :
         query_parameter = self.get_news_parameter(criteria, News)
 
-        news_result = self.db_connection.session.query(News).with_entities(*query_parameter.get('with_entities')).filter(and_(*query_parameter.get('filter'))).order_by(*query_parameter.get('order_by')).limit(self.query_limit).all()
+        news_result = self.db_connection.session.query(News).with_entities(*query_parameter.get('with_entities')).filter(and_(*query_parameter.get('filter'))).group_by(*query_parameter.get('group_by')).order_by(*query_parameter.get('order_by')).limit(self.query_limit).all()
 
         result = [ dict(zip(query_parameter.get('key'), row)) for row in news_result]
 
         if len(news_result) == 1 and (criteria.get('NEWS_UUID') is not None) :
 
             map_query_parameter = self.get_news_map_parameter(criteria, NewsMap)
+            print(map_query_parameter)
             news_map_result = self.db_connection.session.query(NewsMap).with_entities(*map_query_parameter.get('with_entities')).filter(and_(*map_query_parameter.get('filter'))).all()
 
             result = {'news' : result, 'metadata' : [ dict(zip(map_query_parameter.get('key'), row)) for row in news_map_result]}
@@ -46,14 +47,23 @@ class Query:
         return result
 
     def get_search(self, criteria) :
+        news_criteria = criteria.copy()
+        news_uuid_list = ['dummy']
+
         if not (criteria.get('CATEGORY_LIST') or criteria.get('CATEGORY')) :
+            criteria.update({'NEWS_UUID' : '%'})
+
             map_query_parameter = self.get_news_map_parameter(criteria, NewsMap)
 
             news_map_result = self.db_connection.session.query(NewsMap).with_entities(*map_query_parameter.get('with_entities')).filter(and_(*map_query_parameter.get('filter'))).all()
+            result_set = [ dict(zip(map_query_parameter.get('key'), row)) for row in news_map_result]
 
-            criteria['NEWS_UUID_LIST'] = [row for row in news_map_result]
+            news_criteria.update({'NEWS_UUID_LIST' : news_uuid_list + [ row['uuid'] for row in result_set]})
+        else:
+            news_criteria.update({'NEWS_UUID' : '%'})
 
-        query_parameter = self.get_news_parameter(criteria, News)
+        query_parameter = self.get_news_parameter(news_criteria, News)
+
         news_result = self.db_connection.session.query(News).with_entities(*query_parameter.get('with_entities')).filter(and_(*query_parameter.get('filter'))).order_by(*query_parameter.get('order_by')).limit(self.query_limit).all()
 
         return [ dict(zip(query_parameter.get('key'), row)) for row in news_result]
@@ -87,25 +97,65 @@ class Query:
         return [ dict(zip(query_parameter.get('key'), row)) for row in sentiment_result]
 
     def get_news_parameter (self, criteria, orm_class):
-        with_entities = [orm_class.NEWS_UUID, orm_class.NEWS_DAY, orm_class.NEWS_TITLE, orm_class.NEWS_ABSTRACT, orm_class.CATEGORY ]
+        with_entities = []
         order_by = []
         filter = []
-        key = ['uuid', 'news_day', 'news_title', 'news_abstract', 'category']
+        key = []
+        group_by = []
+        require_base = True
 
-        if criteria.get('NEWS_UUID'):
-            filter.append(orm_class.NEWS_UUID == criteria.get('NEWS_UUID'))
+        if criteria.get('NEWS_UUID') or criteria.get('NEWS_UUID_LIST'):
+            if criteria.get('NEWS_UUID'):
+                filter.append(orm_class.NEWS_UUID.like(criteria.get('NEWS_UUID')))
+            if criteria.get('NEWS_UUID_LIST'):
+                filter.append(orm_class.NEWS_UUID.in_(criteria.get('NEWS_UUID_LIST')))
+
             with_entities.append(orm_class.NEWS_CONTEXT)
             key.append('news_context')
-
-        if criteria.get('NEWS_UUID_LIST'):
-            filter.append(orm_class.NEWS_UUID.in_(criteria.get('NEWS_UUID_LIST')))
-
+            with_entities.append(orm_class.NEWS_UUID)
+            key.append('uuid')
+            with_entities.append(orm_class.NEWS_DAY)
+            key.append('news_day')
+            with_entities.append(orm_class.NEWS_TITLE)
+            key.append('news_title')
+            with_entities.append(orm_class.NEWS_ABSTRACT)
+            key.append('news_abstract')
+            with_entities.append(orm_class.CATEGORY)
+            key.append('category')
+            require_base = False
 
         if criteria.get('DATE'):
             filter.append(orm_class.NEWS_DAY.like(criteria.get('DATE')))
 
+            if not (criteria.get('NEWS_UUID') or criteria.get('NEWS_UUID_LIST')):
+                group_by.append(orm_class.SORT_YEAR)
+                with_entities.append(orm_class.SORT_YEAR)
+                key.append('year')
+
+                with_entities.append(func.count(orm_class.NEWS_COUNT).label('news_count'))
+                order_by.append(text('news_count desc'))
+                key.append('news_count')
+                require_base = False
+
         if criteria.get('WEEK_DAY'):
-            filter.append(orm_class.DAY_OF_WEEK == criteria.get('WEEK_DAY'))
+            filter.append(orm_class.DAY_OF_WEEK == (criteria.get('WEEK_DAY')))
+            group_by.append(orm_class.DAY_OF_WEEK)
+            with_entities.append(orm_class.DAY_OF_WEEK)
+            key.append('week_day')
+
+        if criteria.get('YEAR'):
+            group_by.append(orm_class.SORT_MONTH)
+            with_entities.append(orm_class.SORT_MONTH)
+            key.append('month')
+
+        if criteria.get('MONTH'):
+            if not criteria.get('WEEK_DAY'):
+                group_by.append(orm_class.SORT_DAY)
+                with_entities.append(orm_class.SORT_DAY)
+                key.append('day')
+
+        if criteria.get('DAY'):
+            filter.append(orm_class.SORT_DAY == criteria.get('DAY'))
 
         if criteria.get('CATEGORY'):
             filter.append(orm_class.CATEGORY == criteria.get('CATEGORY'))
@@ -113,7 +163,16 @@ class Query:
         if criteria.get('CATEGORY_LIST'):
             filter.append(orm_class.CATEGORY.in_(criteria.get('CATEGORY_LIST')))
 
-        return { 'with_entities' : with_entities, 'filter' : filter, 'key' : key, 'order_by' : order_by }
+        if require_base and (not (criteria.get('DATE') or criteria.get('DAY') or criteria.get('WEEK_DAY'))):
+            group_by.append(orm_class.SORT_YEAR)
+            with_entities.append(orm_class.SORT_YEAR)
+            key.append('year')
+
+            with_entities.append(func.count(orm_class.NEWS_COUNT).label('news_count'))
+            order_by.append(text('news_count desc'))
+            key.append('news_count')
+
+        return { 'with_entities' : with_entities, 'filter' : filter, 'key' : key, 'order_by' : order_by, 'group_by' : group_by }
 
     def get_news_map_parameter (self, criteria, orm_class):
         with_entities = []
@@ -121,9 +180,11 @@ class Query:
         key = []
 
         if criteria.get('NEWS_UUID'):
-            filter.append(orm_class.NEWS_UUID == criteria.get('NEWS_UUID'))
+            filter.append(orm_class.NEWS_UUID.like(criteria.get('NEWS_UUID')))
+            with_entities.append(orm_class.NEWS_UUID)
             with_entities.append(orm_class.NEWS_METADATA_KEY)
             with_entities.append(orm_class.NEWS_METADATA_VALUE)
+            key.append('uuid')
             key.append('key')
             key.append('value')
 
@@ -150,27 +211,32 @@ class Query:
             filter.append(orm_class.NEWS_METADATA_VALUE == criteria.get('TOPIC'))
 
         if criteria.get('TAG_LIST'):
-            filter.append(orm_class.NEWS_METADATA_KEY.in_(criteria.get('TAG_LIST')))
+            filter.append(orm_class.NEWS_METADATA_KEY == 'tag')
+            filter.append(orm_class.NEWS_METADATA_VALUE.in_(criteria.get('TAG_LIST')))
 
         if criteria.get('SENTIMENT_LIST'):
-            filter.append(orm_class.SENTIMENT.in_(criteria.get('SENTIMENT_LIST')))
+            filter.append(orm_class.NEWS_METADATA_KEY == 'sentiment')
+            filter.append(orm_class.NEWS_METADATA_VALUE.in_(criteria.get('SENTIMENT_LIST')))
 
         if criteria.get('TOPIC_LIST'):
-            filter.append(orm_class.TOPIC.in_(criteria.get('TOPIC_LIST')))
+            filter.append(orm_class.NEWS_METADATA_KEY == 'topic')
+            filter.append(orm_class.NEWS_METADATA_VALUE.in_(criteria.get('TOPIC_LIST')))
 
-        print({ 'with_entities' : with_entities, 'filter' : filter, 'key' : key })
         return { 'with_entities' : with_entities, 'filter' : filter, 'key' : key }
 
     def get_metadata_parameter (self, criteria, orm_class, base_column, base_key):
         group_by = []
-        with_entities = []
+        with_entities = [ func.count(orm_class.NEWS_COUNT).label('news_count') ]
         filter = []
-        order_by = []
-        key = []
+        order_by = [ text('news_count desc') ]
+        key = [ 'news_count' ]
         require_base = True
 
         if criteria.get('DATE'):
             filter.append(orm_class.NEWS_DAY.like(criteria.get('DATE')))
+            group_by.append(orm_class.SORT_YEAR)
+            with_entities.append(orm_class.SORT_YEAR)
+            key.append('year')
 
         if criteria.get('WEEK_DAY'):
             filter.append(orm_class.DAY_OF_WEEK == (criteria.get('WEEK_DAY')))
@@ -179,11 +245,8 @@ class Query:
             key.append('week_day')
 
         if criteria.get('YEAR'):
-            group_by.append(orm_class.SORT_YEAR)
             group_by.append(orm_class.SORT_MONTH)
-            with_entities.append(orm_class.SORT_YEAR)
             with_entities.append(orm_class.SORT_MONTH)
-            key.append('year')
             key.append('month')
 
         if criteria.get('MONTH'):
@@ -223,7 +286,7 @@ class Query:
             key.append('topic')
             require_base = False
 
-        if require_base and (not criteria.get('DATE') or criteria.get('DAY') or criteria.get('WEEK_DAY')):
+        if require_base and (not (criteria.get('DATE') or criteria.get('DAY') or criteria.get('WEEK_DAY'))):
             group_by.append(base_column)
             with_entities.append(base_column)
             key.append(base_key)
