@@ -128,20 +128,6 @@ def search():
         logging.error(str(traceback.format_exc()))
         return response.failure("Request failed. " + str(e))
 
-# @app.route('/rating/<uuid>/<int:rating>', methods=['POST'])
-# def rating(uuid, rating):
-#     try:
-#         request_handler.handle_rating(uuid, rating)
-#         return response.success("success")
-#     except Exception as e:
-#         print(traceback.format_exc())
-#         logging.error(str(traceback.format_exc()))
-#         return response.failure("Request failed. " + str(e))
-
-# @app.route('/interaction', methods=['POST'])
-# def interaction():
-#     return
-
 @app.errorhandler(Exception)
 def handle_error(e):
     print(traceback.format_exc())

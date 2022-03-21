@@ -97,7 +97,6 @@ class News(Base):
     CATEGORY = Column(String, nullable=False)
     NEWS_ABSTRACT = Column(LONGTEXT, nullable=False)
     NEWS_CONTEXT = Column(LONGTEXT, nullable=False)
-    RATING = Column(Integer, nullable=False)
 
     def __init__(self, news_uuid, news_day, week_day, title, context, category):
         self.NEWS_UUID = news_uuid

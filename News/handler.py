@@ -74,6 +74,3 @@ class Handler():
         elif category:
             query = {'CATEGORY' : category}
         return query
-
-    def handle_rating(self, uuid, rating):
-        self.interaction.add_news_rating(uuid, rating)

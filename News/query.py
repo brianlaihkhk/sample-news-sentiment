@@ -43,8 +43,6 @@ class Query:
 
             result = {'news' : result, 'metadata' : [ dict(zip(map_query_parameter.get('key'), row)) for row in news_map_result]}
 
-            self.add_news_popularity(self.get_set_news(uuid = criteria.get('NEWS_UUID')))
-
         return result
 
     def get_search(self, criteria) :
@@ -59,15 +57,6 @@ class Query:
         news_result = self.db_connection.session.query(News).with_entities(*query_parameter.get('with_entities')).filter(and_(*query_parameter.get('filter'))).order_by(*query_parameter.get('order_by')).limit(self.query_limit).all()
 
         return [ dict(zip(query_parameter.get('key'), row)) for row in news_result]
-
-    def add_news_popularity(self, news_list):
-        for news in news_list:
-            news.POPULARITY += 1
-        self.db_connection.session.commit()
-
-    def update_news_vote(self, news, rating):
-        news.RATING += rating
-        self.db_connection.session.commit()
 
     def update_category_count(self, category_list):
         for category in category_list:
@@ -120,10 +109,10 @@ class Query:
         return [ dict(zip(query_parameter.get('key'), row)) for row in sentiment_result]
 
     def get_news_parameter (self, criteria, orm_class):
-        with_entities = [orm_class.NEWS_UUID, orm_class.NEWS_DAY, orm_class.NEWS_TITLE, orm_class.NEWS_ABSTRACT, orm_class.CATEGORY, orm_class.RATING, orm_class.POPULARITY]
+        with_entities = [orm_class.NEWS_UUID, orm_class.NEWS_DAY, orm_class.NEWS_TITLE, orm_class.NEWS_ABSTRACT, orm_class.CATEGORY ]
         order_by = []
         filter = []
-        key = ['uuid', 'news_day', 'news_title', 'news_abstract', 'category', 'rating', 'popularity']
+        key = ['uuid', 'news_day', 'news_title', 'news_abstract', 'category']
 
         if criteria.get('NEWS_UUID'):
             filter.append(orm_class.NEWS_UUID == criteria.get('NEWS_UUID'))
