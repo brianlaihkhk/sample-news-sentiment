@@ -1,26 +1,17 @@
 import json
+from flask import Response
 
-def build_response(statusCode, success, payload):
+def build_response(success, payload):
 
     body = {
         "success": success,
         "payload": payload
     }
 
-    response = {
-        "statusCode": statusCode,
-        "headers": {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": True,
-            "Content-type": "application/json"
-        },
-        "body": json.dumps(body)
-    }
-
-    return response
+    return json.dumps(body)
 
 def success(return_body) :
-    return build_response(200, True, return_body)
+    return Response(build_response(True, return_body), status=200, mimetype='application/json')
 
 def failure(return_body) :
-    return build_response(500, False, return_body)
+    return Response(build_response(False, return_body), status=500, mimetype='application/json')

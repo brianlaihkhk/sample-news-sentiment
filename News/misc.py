@@ -18,5 +18,6 @@ def load_env (file):
             os.environ['RDS_HOST'] = env['RDS_HOST']
             os.environ['RDS_DEFAULT_DB'] = env['RDS_DEFAULT_DB']
             os.environ['RDS_DB_TYPE'] = env['RDS_DB_TYPE']
+            os.environ['APPLICATION_PREFIX'] = env['APPLICATION_PREFIX']
         except yaml.YAMLError as exc:
             print(exc)

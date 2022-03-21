@@ -79,7 +79,7 @@ class FileContext:
 
     def get_random_date(self):
         start_date = datetime.date(2020, 1, 1)
-        end_date = datetime.date(2020, 2, 1)
+        end_date = datetime.date(2021, 12, 31)
 
         time_between_dates = end_date - start_date
         days_between_dates = time_between_dates.days
@@ -141,15 +141,15 @@ class FileContext:
             try :
                 news_uuid = str(uuid.uuid4())
                 self.db_connection.session.add(News(news_uuid, news.news_date, news.week_day, news.title, news.context, news.category))
-                self.db_connection.session.add(NewsMap(news_uuid, 'sentiment', news.sentiment))
+                self.db_connection.session.add(NewsMap(news_uuid, news.news_date, news.week_day, 'sentiment', news.sentiment))
 
                 for topic in news.topic:
                     logging.info('topic : ' + str(topic))
-                    self.db_connection.session.add(NewsMap(news_uuid, 'topic', topic))
+                    self.db_connection.session.add(NewsMap(news_uuid, news.news_date, news.week_day, 'topic', topic))
                     self.db_connection.session.commit()
                 for tag in news.tags:
                     logging.info('tag : ' + tag)
-                    self.db_connection.session.add(NewsMap(news_uuid, 'tag', tag))
+                    self.db_connection.session.add(NewsMap(news_uuid, news.news_date, news.week_day, 'tag', tag))
                     self.db_connection.session.commit()
             except Exception as e:
                 logging.error(str(e))

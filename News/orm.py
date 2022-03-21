@@ -121,12 +121,16 @@ class NewsMap(Base):
     __tablename__ = 'NEWS_MAP'
     NEWS_MAP_UUID = Column(String, primary_key=True)
     NEWS_UUID = Column(String, ForeignKey('NEWS.NEWS_UUID'), nullable=False)
+    NEWS_DAY = Column(String, nullable=False)
+    DAY_OF_WEEK = Column(String, nullable=False)
     NEWS_METADATA_KEY = Column(String, nullable=False)
     NEWS_METADATA_VALUE = Column(String, nullable=False)
 
-    def __init__(self, news_uuid, news_metadata_key, news_metadata_value):
+    def __init__(self, news_uuid, news_day, week_day, news_metadata_key, news_metadata_value):
         self.NEWS_MAP_UUID = str(uuid.uuid4())
         self.NEWS_UUID = news_uuid
+        self.DAY_OF_WEEK = week_day
+        self.NEWS_DAY = news_day
         self.NEWS_METADATA_KEY = news_metadata_key
         self.NEWS_METADATA_VALUE = news_metadata_value
 

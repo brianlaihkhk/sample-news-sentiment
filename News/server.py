@@ -4,133 +4,139 @@ import yaml
 import sys
 import traceback
 import response
-from query import Query
 from misc import load_env
+from flask import Flask, request
+from flask_cors import CORS
+from handler import Handler
+from query import Query
+import logging
 
-class LocalServerRouter(BaseHTTPRequestHandler):
+app = Flask(__name__)
+CORS(app)
+request_handler = None
 
-    def do_GET(self):
-        return_response = response.failure("Error or unsupported operations")
-        event = {"headers" : self.headers}
-        query = Query()
+@app.route('/news', methods=['GET'])
+@app.route('/news/', methods=['GET'])
+@app.route('/news/<category>', methods=['GET'])
+@app.route('/news/<category>/', methods=['GET'])
+@app.route('/news/<category>/<uuid>', methods=['GET'])
+@app.route('/news/<category>/<uuid>/', methods=['GET'])
+def news(category = None, uuid = None):
+    try:
+        event = {}
+        event['query'] = request_handler.handle_news(category, uuid)
+        logging.info(event)
+        print(event)
+        return response.success(request_handler.query.get_news(event))
+    except Exception as e:
+        print(traceback.format_exc())
+        logging.error(str(traceback.format_exc()))
+        return response.failure("Request failed. " + str(e))
 
-        try:
-            if self.path.startswith('/news'):
-                event['query'] = self.handle_news(self.path)
-                print(event)
-                return_response = response.success(query.get_news(event))
-                self.send_response(200)
-            elif self.path.startswith('/category'):
-                event['query'] = self.handle_query(self.path, 'CATEGORY')
-                return_response = response.success(query.get_category(event))
-                self.send_response(200)
-            elif self.path.startswith('/topic'):
-                event['query'] = self.handle_query(self.path, 'TOPIC')
-                return_response = response.success(query.get_topic(event))
-                self.send_response(200)
-            elif self.path.startswith('/sentiment'):
-                event['query'] = self.handle_query(self.path, 'SENTIMENT')
-                return_response = response.success(query.get_sentiment(event))
-                self.send_response(200)
-            elif self.path.startswith('/tag'):
-                event['query'] = self.handle_query(self.path, 'TAG')
-                return_response = response.success(query.get_tag(event))
-                self.send_response(200)
-            else :
-                self.send_response(500)
-        except Exception:
-            traceback.print_exc()       
-            self.send_response(500)
 
-        self.send_header('Content-type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Credentials', True)
-        self.end_headers()
-        self.wfile.write(return_response["body"].encode())
-        
-    def do_POST(self):
-        return_response = response.failure("Error or unsupported operations")
-        event = {"headers" : self.headers}
-        context = {}
-        try:
-            if self.path.startswith('/interaction'):
-                self.send_response(200)
-            else :
-                self.send_response(500)
-        except Exception:
-            traceback.print_exc()       
-            self.send_response(500)
+@app.route('/topic', methods=['GET'])
+@app.route('/topic/', methods=['GET'])
+@app.route('/topic/<date>', methods=['GET'])
+@app.route('/topic/<date>/', methods=['GET'])
+@app.route('/topic/<date>/<topic>', methods=['GET'])
+@app.route('/topic/<date>/<topic>/', methods=['GET'])
+def topic(date = None, topic = None):
+    try:
+        event = {}
+        event['query'] = request_handler.handle_query(date, topic, 'TOPIC')
+        logging.info(event)
+        print(event)
+        return response.success(request_handler.query.get_topic(event))
+    except Exception as e:
+        print(traceback.format_exc())
+        logging.error(str(traceback.format_exc()))
+        return response.failure("Request failed. " + str(e))
 
-        self.send_header('Content-type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Credentials', True)
-        self.end_headers()
-        self.wfile.write(return_response["body"].encode())
+@app.route('/category', methods=['GET'])
+@app.route('/category/', methods=['GET'])
+@app.route('/category/<date>', methods=['GET'])
+@app.route('/category/<date>/', methods=['GET'])
+@app.route('/category/<date>/<category>', methods=['GET'])
+@app.route('/category/<date>/<category>/', methods=['GET'])
+def category(date = None, category = None):
+    try:
+        event = {}
+        event['query'] = request_handler.handle_query(date, category, 'CATEGORY')
+        logging.info(event)
+        print(event)
+        return response.success(request_handler.query.get_category(event))
+    except Exception as e:
+        print(traceback.format_exc())
+        logging.error(str(traceback.format_exc()))
+        return response.failure("Request failed. " + str(e))
 
-    def do_OPTIONS(self):
-        return_response = response.success("Success")
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Credentials', True)
-        self.send_header('Access-Control-Allow-Methods', 'GET,POST')
-        self.send_header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Session, Authorization')
-        self.end_headers()
-        self.wfile.write(return_response["body"].encode())
+@app.route('/tag', methods=['GET'])
+@app.route('/tag/', methods=['GET'])
+@app.route('/tag/<date>', methods=['GET'])
+@app.route('/tag/<date>/', methods=['GET'])
+@app.route('/tag/<date>/<tag>', methods=['GET'])
+@app.route('/tag/<date>/<tag>/', methods=['GET'])
+def tag(date = None, tag = None):
+    try:
+        event = {}
+        event['query'] = request_handler.handle_query(date, tag, 'TAG')
+        logging.info(event)
+        print(event)
+        return response.success(request_handler.query.get_tag(event))
+    except Exception as e:
+        print(traceback.format_exc())
+        logging.error(str(traceback.format_exc()))
+        return response.failure("Request failed. " + str(e))
 
-    def handle_date(self, day_string):
-        filter = {}
+@app.route('/topic', methods=['GET'])
+@app.route('/topic/', methods=['GET'])
+@app.route('/topic/<date>', methods=['GET'])
+@app.route('/topic/<date>/', methods=['GET'])
+@app.route('/topic/<date>/<sentiment>', methods=['GET'])
+@app.route('/topic/<date>/<sentiment>/', methods=['GET'])
+def sentiment(date = None, sentiment = None):
+    try:
+        event = {}
+        event['query'] = request_handler.handle_query(date, sentiment, 'SENTIMENT')
+        logging.info(event)
+        print(event)
+        return response.success(request_handler.query.get_category(event))
+    except Exception as e:
+        print(traceback.format_exc())
+        logging.error(str(traceback.format_exc()))
+        return response.failure("Request failed. " + str(e))
 
-        week_data = day_string.split('-')
+@app.route('/search/', methods=['GET'])
+def search():
+    try:
+        event = {}
+        event['query'] = request_handler.handle_search(request.query_string.decode("utf-8") )
+        logging.info(event)
+        print(event)
+        return response.success(request_handler.query.get_search(event))
+    except Exception as e:
+        print(traceback.format_exc())
+        logging.error(str(traceback.format_exc()))
+        return response.failure("Request failed. " + str(e))
 
-        if len(week_data) == 4 and str(week_data[0]):
-            filter['WEEK_DAY'] = week_data[0]
+@app.route('/rating', methods=['POST'])
+@app.route('/rating/', methods=['POST'])
+def rating():
+    return
 
-        if len(week_data) == 4 and str(week_data[3]) and str(week_data[2]) and str(week_data[1]):
-            filter['DATE'] = str(week_data[1]) + str(week_data[2]) + str(week_data[3])
-            filter['YEAR'] = str(week_data[1])
-            filter['MONTH'] = str(week_data[2])
-            filter['DAY'] = str(week_data[3])
-        elif len(week_data) == 4 and str(week_data[2]) and str(week_data[1]):
-            filter['DATE'] = str(week_data[1]) + str(week_data[2]) + "%"
-            filter['YEAR'] = str(week_data[1])
-            filter['MONTH'] = str(week_data[2])
-        elif len(week_data) == 4 and str(week_data[1]):
-            filter['DATE'] = str(week_data[1]) + "%"
-            filter['YEAR'] = str(week_data[1])
-        elif len(week_data) == 4 and not str(week_data[3]) and not str(week_data[2]) and not str(week_data[1]) :
-            filter['DATE'] = "%"
-        else :
-            raise Exception('Unsupported date query format')
+@app.route('/interaction', methods=['POST'])
+@app.route('/interaction/', methods=['POST'])
+def interaction():
+    return
 
-        return filter
-
-    def handle_query(self, path, key):
-        path_data = path.split('/')[1:]
-        if len(path_data) >= 3:
-            query = {key : path_data[2] if path_data[2] else '%' }
-            query.update(self.handle_date(path_data[1]))
-            print(query)
-            return query 
-        elif len(path_data) >= 2:
-            query = {key : '%'}
-            query.update(self.handle_date(path_data[1]))
-            return query 
-        else :
-            raise Exception('Unsupported path query format')
-
-    def handle_news(self, path):
-        path_data = path.split('/')[1:]
-        print(str(path_data))
-        if len(path_data) >= 3 and path_data[1] and path_data[2]:
-            query = {'CATEGORY' : path_data[1], 'NEWS_UUID' : path_data[2]}
-            return query 
-        elif len(path_data) >= 2 and path_data[1]:
-            query = {'CATEGORY' : path_data[1]}
-            return query
-        return {}
+@app.errorhandler(Exception)
+def handle_error(e):
+    print(traceback.format_exc())
+    logging.error(str(traceback.format_exc()))
+    return response.failure("Request failed")
 
 if __name__ == "__main__":
     load_env(sys.argv[1])
-    httpd = HTTPServer(('localhost', 8081), LocalServerRouter)
-    httpd.serve_forever()
+    db = Query(app)
+    request_handler = Handler(db)
+    app.run(host='127.0.0.1', port=8000)
