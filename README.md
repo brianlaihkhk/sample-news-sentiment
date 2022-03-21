@@ -3,28 +3,29 @@ Coding assessment - News sentiment - Submitted by Brian Lai
 
 ### Features
 
+- OLAP data structure design for BI analysis / reporting
+- Client UI / Backend for reporting illustration
 - Text mining, sentiment mining based on news context
 - Provide popularity, topics, tags for user to select based on their interested area
-- User is able to roll-up / drill-down based on the popularity from multiple dimensions (based on year / month / day / weekday / tag / category / sentiment / topic)
-- User is able to obtain the related news based on multiple criteria
-- Machine learning to learn user beheavioral pattern that suggest interested topics / tags
-- Support non-AWS setup or AWS setup for your needs
+- Flexibility on aggregated data roll-up / drill-down based on multiple dimensions (year / month / day / weekday / tag / category / sentiment / topic)
+- User is able to search, obtain single piece of news and visualize metadata association
+- Support non-AWS setup or AWS setup
 
 ### Framework 
 
-- scikit-learn
 - TextBlob
 - sqlAlchemy
+- Flask
 
 ### Folder
 
-- ETL : ETL script to capture metadata (e.g sentiment), aggregate data
+- Sample : Massaged news for ETL (BBC news, check below Remarks)
+- ETL : ETL script to extract massaged news, generate metadata, aggregate data for OLAP
 - Documentation : Documentation
 - Deploy : Deployment script
-- News : Serverless application for support client UI interactions
-- Client : reactJs UI for client interactions
+- News : Backend server for data analysis / BI illustration
+- Client : Frontend UI for data analysis / BI illustration
 - Tools : Tools for encryption, encoding and local server script for testing
-- Sample : Sample data for data population
 - Setup : Setup script for database initialization
 
 ### Prerequsite
@@ -34,24 +35,24 @@ Coding assessment - News sentiment - Submitted by Brian Lai
 - [AWS solution]
    - AWS IAM (Permission setup)
    - AWS VPC (Network connection capability)
-   - AWS ECS / AWS EKS (or equivalent)
+   - AWS ECS / AWS EKS (or equivalent for Client + News module)
    - AWS S3
    - AWS Glue
-   - AWS Redshift
+   - AWS Redshift (OLAP for ETL and aggregated data)
    - AWS-cli or AWS CloudFormation
 
 - [non-AWS solution]
-   - Docker
-   - MySQL / Oracle RDBMS (or other SQL database for OLAP)
+   - Docker (for Client + News module)
+   - MySQL / Oracle RDBMS (or other SQL database)
    - (Optional) Docker swarm, Kubernetes or equivalent 
 
 ### Technical Assessment Requirement
 
-- Capture, aggregate news based on sentiment, topic, keywords, or other related metadata (e.g popularity)
+- Capture, aggregate news sentiment based on related metadata (topic, keywords, or others)
 - Provide suggestions to users by their preferences and interest
-- User is able to search, select and up-vote / down-vote news
+- User is able to search, select and navigate news
+- Provide roll-up / drill-down capability for metadata
 - Logging / documentation and testing are expected as part of the solution.
-- (Bonus) Provide roll-up / drill-down capability for metadata
 
 ### Time limit
 

@@ -16,7 +16,6 @@ class AggregateCategory(Base):
     SORT_DAY = Column(String, nullable=False)
     CATEGORY = Column(String, primary_key=True)
     NEWS_COUNT = Column(Integer, nullable=False)
-    POPULARITY = Column(Integer, nullable=False)
 
     def __init__(self, news_day, week_day, category, news_count):
         self.NEWS_DAY = news_day
@@ -26,7 +25,6 @@ class AggregateCategory(Base):
         self.SORT_DAY = time.strftime("%d", time.strptime(news_day, "%Y%m%d"))
         self.CATEGORY = category
         self.NEWS_COUNT = news_count
-        self.POPULARITY = 0
 
 class AggregateSentiment(Base):
     __tablename__ = 'AGGREGATE_SENTIMENT'
@@ -38,7 +36,6 @@ class AggregateSentiment(Base):
     SORT_DAY = Column(String, nullable=False)
     SENTIMENT = Column(String, primary_key=True, nullable=False)
     NEWS_COUNT = Column(Integer, nullable=False)
-    POPULARITY = Column(Integer, nullable=False)
 
     def __init__(self, news_day, week_day, sentiment, news_count):
         self.NEWS_DAY = news_day
@@ -48,7 +45,6 @@ class AggregateSentiment(Base):
         self.SORT_DAY = time.strftime("%d", time.strptime(news_day, "%Y%m%d"))
         self.SENTIMENT = sentiment
         self.NEWS_COUNT = news_count
-        self.POPULARITY = 0
 
 class AggregateTopic(Base):
     __tablename__ = 'AGGREGATE_TOPIC'
@@ -60,7 +56,6 @@ class AggregateTopic(Base):
     SORT_DAY = Column(String, nullable=False)
     TOPIC = Column(String, primary_key=True)
     NEWS_COUNT = Column(Integer, nullable=False)
-    POPULARITY = Column(Integer, nullable=False)
 
     def __init__(self, news_day, week_day, topic, news_count):
         self.NEWS_DAY = news_day
@@ -70,7 +65,6 @@ class AggregateTopic(Base):
         self.SORT_DAY = time.strftime("%d", time.strptime(news_day, "%Y%m%d"))
         self.TOPIC = topic
         self.NEWS_COUNT = news_count
-        self.POPULARITY = 0
 
 class AggregateTag(Base):
     __tablename__ = 'AGGREGATE_TAG'
@@ -82,7 +76,6 @@ class AggregateTag(Base):
     SORT_DAY = Column(String, nullable=False)
     TAG = Column(String, primary_key=True)
     NEWS_COUNT = Column(Integer, nullable=False)
-    POPULARITY = Column(Integer, nullable=False)
 
     def __init__(self, news_day, week_day, tag, news_count):
         self.NEWS_DAY = news_day
@@ -92,7 +85,6 @@ class AggregateTag(Base):
         self.SORT_DAY = time.strftime("%d", time.strptime(news_day, "%Y%m%d"))
         self.TAG = tag
         self.NEWS_COUNT = news_count
-        self.POPULARITY = 0
 
 
 class News(Base):
@@ -103,8 +95,8 @@ class News(Base):
     DAY_OF_WEEK = Column(String, nullable=False)
     NEWS_TITLE = Column(String, nullable=False)
     CATEGORY = Column(String, nullable=False)
+    NEWS_ABSTRACT = Column(LONGTEXT, nullable=False)
     NEWS_CONTEXT = Column(LONGTEXT, nullable=False)
-    POPULARITY = Column(Integer, nullable=False)
     RATING = Column(Integer, nullable=False)
 
     def __init__(self, news_uuid, news_day, week_day, title, context, category):
@@ -113,9 +105,8 @@ class News(Base):
         self.NEWS_DAY = news_day
         self.NEWS_TITLE = title
         self.NEWS_CONTEXT = context
+        self.NEWS_ABSTRACT = context.split(' ')[:30]
         self.CATEGORY = category
-        self.POPULARITY = 0
-        self.RATING = 0
 
 class NewsMap(Base):
     __tablename__ = 'NEWS_MAP'
@@ -133,21 +124,3 @@ class NewsMap(Base):
         self.NEWS_DAY = news_day
         self.NEWS_METADATA_KEY = news_metadata_key
         self.NEWS_METADATA_VALUE = news_metadata_value
-
-class AggregateInteraction(Base):
-    __tablename__ = 'AGGREGATE_INTERACTION'
-
-    INTERACTION_DAY = Column(String, primary_key=True)
-    DAY_OF_WEEK = Column(String, nullable=False)
-    NEWS_METADATA_KEY = Column(String, nullable=False)
-    NEWS_METADATA_VALUE = Column(String, nullable=False)
-    PREVIOUS_METADATA_VALUE = Column(String, nullable=False)
-    INTERACTION_COUNT = Column(String, nullable=False)
-
-    def __init__(self, news_day, week_day, news_metadata_key, news_metadata_value, pervious_metadata_value):
-        self.INTERACTION_DAY = news_day
-        self.DAY_OF_WEEK = week_day
-        self.NEWS_METADATA_KEY = news_metadata_key
-        self.NEWS_METADATA_VALUE = news_metadata_value
-        self.PREVIOUS_METADATA_VALUE = pervious_metadata_value
-        self.INTERACTION_COUNT = 0

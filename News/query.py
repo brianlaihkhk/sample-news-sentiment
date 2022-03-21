@@ -5,7 +5,7 @@ from sqlalchemy import or_, and_, func, text
 class Query:
     def __init__(self, db):
         self.db_connection = db
-        self.query_limit = 50
+        self.query_limit = 200
 
     def get_set_news (self, uuid = None, category = None):
         filter = {}
@@ -120,16 +120,19 @@ class Query:
         return [ dict(zip(query_parameter.get('key'), row)) for row in sentiment_result]
 
     def get_news_parameter (self, criteria, orm_class):
-        with_entities = [orm_class.NEWS_UUID, orm_class.NEWS_DAY, orm_class.NEWS_TITLE, orm_class.NEWS_CONTEXT, orm_class.CATEGORY, orm_class.RATING, orm_class.POPULARITY]
+        with_entities = [orm_class.NEWS_UUID, orm_class.NEWS_DAY, orm_class.NEWS_TITLE, orm_class.NEWS_ABSTRACT, orm_class.CATEGORY, orm_class.RATING, orm_class.POPULARITY]
         order_by = []
         filter = []
-        key = ['uuid', 'news_day', 'news_title', 'news_context', 'category', 'rating', 'popularity']
+        key = ['uuid', 'news_day', 'news_title', 'news_abstract', 'category', 'rating', 'popularity']
 
         if criteria.get('NEWS_UUID'):
             filter.append(orm_class.NEWS_UUID == criteria.get('NEWS_UUID'))
+            with_entities.append(orm_class.NEWS_CONTEXT)
+            key.append('news_context')
 
         if criteria.get('NEWS_UUID_LIST'):
             filter.append(orm_class.NEWS_UUID.in_(criteria.get('NEWS_UUID_LIST')))
+
 
         if criteria.get('DATE'):
             filter.append(orm_class.NEWS_DAY.like(criteria.get('DATE')))
@@ -255,7 +258,12 @@ class Query:
             key.append('topic')
             require_base = False
 
-        if require_base and (criteria.get('DAY') or criteria.get('WEEK_DAY')):
+        if require_base and (not criteria.get('DATE') or criteria.get('DAY') or criteria.get('WEEK_DAY')):
+            group_by.append(base_column)
+            with_entities.append(base_column)
+            key.append(base_key)
+
+        if orm_class == AggregateCategory:
             group_by.append(base_column)
             with_entities.append(base_column)
             key.append(base_key)

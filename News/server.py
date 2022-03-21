@@ -16,6 +16,19 @@ app = Flask(__name__)
 CORS(app)
 request_handler = None
 
+@app.route('/suggest', methods=['GET'])
+def suggest():
+    try:
+        query = request_handler.handle_news(None, None)
+        logging.info(query)
+        print(query)
+        return response.success(request_handler.query.get_news(query))
+    except Exception as e:
+        print(traceback.format_exc())
+        logging.error(str(traceback.format_exc()))
+        return response.failure("Request failed. " + str(e))
+
+
 @app.route('/news', methods=['GET'])
 @app.route('/news/', methods=['GET'])
 @app.route('/news/<category>', methods=['GET'])
@@ -115,19 +128,19 @@ def search():
         logging.error(str(traceback.format_exc()))
         return response.failure("Request failed. " + str(e))
 
-@app.route('/rating/<uuid>/<int:rating>', methods=['POST'])
-def rating(uuid, rating):
-    try:
-        request_handler.handle_rating(uuid, rating)
-        return response.success("success")
-    except Exception as e:
-        print(traceback.format_exc())
-        logging.error(str(traceback.format_exc()))
-        return response.failure("Request failed. " + str(e))
+# @app.route('/rating/<uuid>/<int:rating>', methods=['POST'])
+# def rating(uuid, rating):
+#     try:
+#         request_handler.handle_rating(uuid, rating)
+#         return response.success("success")
+#     except Exception as e:
+#         print(traceback.format_exc())
+#         logging.error(str(traceback.format_exc()))
+#         return response.failure("Request failed. " + str(e))
 
-@app.route('/interaction', methods=['POST'])
-def interaction():
-    return
+# @app.route('/interaction', methods=['POST'])
+# def interaction():
+#     return
 
 @app.errorhandler(Exception)
 def handle_error(e):
