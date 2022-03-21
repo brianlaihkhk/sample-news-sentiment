@@ -78,7 +78,7 @@ class FileContext:
         return file_list
 
     def get_random_date(self):
-        start_date = datetime.date(2020, 1, 1)
+        start_date = datetime.date(2018, 1, 1)
         end_date = datetime.date(2021, 12, 31)
 
         time_between_dates = end_date - start_date

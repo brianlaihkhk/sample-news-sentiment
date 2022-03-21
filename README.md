@@ -64,6 +64,7 @@ Coding assessment - News sentiment - Submitted by Brian Lai
 ### Remarks
 - Using cryptography / cryptocode / simple-crypt will show **invalid elf header** in AWS Lambda (Under osx development). This project will use JWT for configuration encryption and decryption.
 - There is no news scraping script included in this project. You can create automated news scraping task using AWS EventBridge or equivalent.
+- This project does not provide BI reports for aggregated data navigation and data analysis.
 - Regarding to the news source, there are various examples you can find online. For example, you can select all-in-one local news consolidation tools like https://hknews.dev (Source : https://github.com/ayltai/hknews) 
 
 ### Contact
