@@ -1,0 +1,10 @@
+pymysql==1.0.2
+pyjwt==2.3.0
+flask==2.0.3
+flask_sqlalchemy==2.5.1
+flask_cors==3.0.10
+pyyaml==5.4.1
+sqlalchemy-redshift==0.8.9
+psycopg2-binary==2.9.3
+textblob==0.17.1
+nltk==3.7
