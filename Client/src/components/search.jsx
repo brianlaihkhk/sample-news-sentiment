@@ -9,52 +9,93 @@ class Search extends Component {
     }
 
     state = {
-        criteria : new Map()
+        criteria : new Map(),
+        userSearchType : null,
+        userSearchText : null
     }
 
-    addCriteria = (e) => {
-        new_criteria = this.state.criteria;
-        if (new_criteria.get(e.taget.type.value) == null){
-            new_criteria.set(e.taget.type.value, e.target.query.value);
+    onSearchTypeChange = (e) => {
+        this.setState({userSearchType : e.target.value.trim()});
+    }
+
+    onSearchTextChange = (e) => {
+        this.setState({userSearchText : e.target.value.trim()});
+    }
+
+    validateForm = (e) => {
+        if (this.state.userSearchType && !(this.state.userSearchType === 'select') && this.state.userSearchText){
+            console.log(this.state.userSearchType);
+            console.log(this.state.userSearchText);
+            this.addCriteria(this.state.userSearchType, this.state.userSearchText);
+            this.setState({userSearchType: null, userSearchText : null});
+            document.getElementById("searchForm").reset();
+        }
+    }
+    
+    addCriteria = (key, value) => { 
+        var new_criteria = this.state.criteria;
+        
+        if (new_criteria.get(key) == null){
+            new_criteria.set(key, value.toLowerCase());
         } else {
-            var new_value = new_criteria.get(e.taget.type.value) + ',' + e.target.query.value
-            new_criteria.set(e.taget.type.value, new_value);
+            var new_value = new_criteria.get(key) + ',' + value.toLowerCase();
+            new_criteria.set(key, new_value);
         }
         
-        setState({criteria : new_criteria})
+        this.setState({criteria : new_criteria});
     }
 
     resetCriteria = (e) => {
-        setState({criteria : new Map()})
+        this.setState({criteria : new Map()});
+        document.getElementById("searchForm").reset();
     }
 
 
     submitCriteria = (e) => {
-        const params = new URLSearchParams(this.state.criteria)
-        this.handle(null, "/search?" + params.toString(), "GET", null, this.updateMain, this.defaultError, 'search')  
+        console.log(this.state.criteria.size)
+        if (this.state.criteria.size > 0){
+            const params = new URLSearchParams(this.state.criteria);
+            this.handle(null, "/search?" + params.toString(), "GET", null, this.updateMain, this.defaultError, 'search');
+            document.getElementById("searchForm").reset();
+        }
+    }
+
+    printCurrentCriteria = (e) => {
+        var output = []
+        var enteries = [...this.state.criteria.entries()]
+        console.log(enteries);
+
+        enteries.forEach((item) => {
+            console.log(item);
+            var key = item[0];
+            var value = item[1];
+            output.push(<p>{key} : {value}</p>);
+        });
+
+        return output;
     }
 
     render() {
+        var currentCriteria = this.printCurrentCriteria();
         return (
             <div>
                 <p>Search</p>
-                <p>
-                    <form onSubmit={this.addCriteria}>
-                        <select name="type" id="type">
-                            <option value="category">Category</option>
-                            <option value="topic">Topic</option>
-                            <option value="tag">Tag</option>
-                            <option value="sentiment">Sentiment</option>
-                        </select>
-                        <input type="text" name="query" />
-                        <input type="submit" value="ADD" />
-                    </form>
-                </p>
-
+                <form id="searchForm">
+                    <select name="type" id="type"  onChange={this.onSearchTypeChange}>
+                        <option value="select" default>-- Please select --</option>
+                        <option value="category">Category</option>
+                        <option value="topic">Topic</option>
+                        <option value="tag">Tag</option>
+                        <option value="sentiment">Sentiment</option>
+                    </select>
+                    <input type="text" name="query" onChange={this.onSearchTextChange} />
+                    <input type="button" value="ADD" onClick={this.validateForm} />
+                </form>
+                <br />
                 <button onClick={this.submitCriteria} >Search</button> <button onClick={this.resetCriteria} >Reset</button>
                 <hr />
                 <p>Current Search Criteria :</p>
-                <p>{this.state.criteria}</p>
+                <p>{currentCriteria}</p>
             </div>
             
         );

@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import NewsItem from "./components/news_item";
 
 class Category extends Component {
     constructor(props){
@@ -17,11 +16,11 @@ class Category extends Component {
         return (
             <div>Browse news by category : 
                 <ul>
-                    <li name='business' onClick={this.menuClick} >Business</li>
-                    <li name='tech' onClick={this.menuClick} >Technology</li>
-                    <li name='politics' onClick={this.menuClick} >Politics</li>
-                    <li name='entertainment' onClick={this.menuClick} >Entertainment</li>
-                    <li name='sport' onClick={this.menuClick} >Sport</li>
+                    <li><a href='#' name='business' onClick={this.categoryClick} >Business</a></li>
+                    <li><a href='#' name='tech' onClick={this.categoryClick} >Technology</a></li>
+                    <li><a href='#' name='politics' onClick={this.categoryClick} >Politics</a></li>
+                    <li><a href='#' name='entertainment' onClick={this.categoryClick} >Entertainment</a></li>
+                    <li><a href='#' name='sport' onClick={this.categoryClick} >Sport</a></li>
                 </ul>
             </div>
             

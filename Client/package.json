@@ -1,5 +1,5 @@
 {
-  "name": "order",
+  "name": "news",
   "version": "0.2.0",
   "private": true,
   "engines": {
@@ -36,11 +36,12 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "gh-pages": "^3.2.3",
-    "webpack": "^4.28.3",
-    "webpack-cli": "^4.9.2",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
-    "enzyme-to-json": "^3.5.0"
+    "enzyme-to-json": "^3.5.0",
+    "eslint": "^5.12.0",
+    "gh-pages": "^3.2.3",
+    "webpack": "^4.28.3",
+    "webpack-cli": "^4.9.2"
   }
 }

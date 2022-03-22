@@ -9,7 +9,7 @@ const HOST = 'http://localhost:8000';
 class App extends Component {
 
   state = {
-    content : null,
+    content : 'main',
     type : 'main',
     url : null
   };
@@ -36,38 +36,36 @@ class App extends Component {
     .catch(err => this.exceptionHandler(err));
   }
 
-  updateMainView = (payload, url, type) => {
-    this.setState({ mainContent : payload , url: url, mainType : type });
+  updateMain = (payload, url, type) => {
+    this.setState({ content : payload , url: url, type : type });
   }
 
   exceptionHandler = (err) => {
     console.log("exceptionHandler");
     console.log(err);
-    this.setState({ mainContent : "Internal Server Error.  Please retry again.", mainType : 'error' });
+    this.setState({ content : "Internal Server Error.  Please retry again.", type : 'error' });
   }
 
   notSucessDisplayError = (payload) => {
     console.log("notSucessDisplayError");
     console.log(payload);
-    this.setState({ error : payload != null ? mainContent : "Connection Error. Please retry again.", mainType : 'error' });
+    this.setState({ content : payload != null ? "Connection Error. " + payload : "Connection Error. Please retry again.", type : 'error' });
   }
 
   render() {
-    const {content, type, url} = this.state;
-
     return (
       <div className="main__wrap">
         <main className="container">
-          <div class="header">
-              <SelectMenu handle={this.handleCall} updateMain={this.updateMainView} defaultError={this.notSucessDisplayError} />
+          <div className="header">
+              <SelectMenu handle={this.handleCall} updateMain={this.updateMain} defaultError={this.notSucessDisplayError} />
           </div>
-          <div class="wrapper clearfix">
-            <div class="section">
-              <MainView type={type} content={content} url={url} handle={this.updateMainView} updateMain={success} defaultError={this.notSucessDisplayError} />
+          <div className="wrapper clearfix">
+            <div className="section">
+              <MainView state={this.state} handle={this.handleCall} updateMain={this.updateMain} defaultError={this.notSucessDisplayError} />
             </div>
-            <div class="nav">
-              <Search handle={this.handleCall} updateMain={this.updateMainView} defaultError={this.notSucessDisplayError} />
-              <Category handle={this.handleCall} updateMain={this.updateMainView} defaultError={this.notSucessDisplayError} />
+            <div className="nav">
+              <Search handle={this.handleCall} updateMain={this.updateMain} defaultError={this.notSucessDisplayError} />
+              <Category handle={this.handleCall} updateMain={this.updateMain} defaultError={this.notSucessDisplayError} />
             </div>
           </div>
         </main>
