@@ -16,7 +16,6 @@ class Article extends Component {
         this.handle(null, "/search/?category=" + category, "GET", null, this.updateMain, this.defaultError, 'search')  
     }
     searchSentiment = (e, sentiment) => {
-        console.log(sentiment);
         this.handle(null, "/search/?sentiment=" + sentiment, "GET", null, this.updateMain, this.defaultError, 'search')  
     }
     searchTopic = (e, topic) => {

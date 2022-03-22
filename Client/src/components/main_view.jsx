@@ -12,7 +12,7 @@ class MainView extends Component {
     }
 
     handleView = () => {
-        const {type, url, content} = this.props.state;
+        const {type, url, content, selectWeekDay} = this.props.state;
 
         var display = []
 
@@ -22,19 +22,13 @@ class MainView extends Component {
                             }
                             break;
             case 'category' : display.push(
-                                <MainTable type={type} content={content} handle={this.handle} url={url} updateMain={this.updateMain} defaultError={this.defaultError} /> );
+                                <MainTable type={type} content={content} handle={this.handle} url={url} selectWeekDay={selectWeekDay} updateMain={this.updateMain} defaultError={this.defaultError} /> );
                             break;
-            case 'tag' : display.push(
-                                <MainTable type={type} content={content} handle={this.handle} url={url} updateMain={this.updateMain} defaultError={this.defaultError} /> );
-                            break;
-            case 'topic' : display.push(
-                                <MainTable type={type} content={content} handle={this.handle} url={url} updateMain={this.updateMain} defaultError={this.defaultError} /> );
-                            break;
-            case 'sentiment' : display.push(
-                                <MainTable type={type} content={content} handle={this.handle} url={url} updateMain={this.updateMain} defaultError={this.defaultError} /> );
-                            break;
+            case 'tag' : 
+            case 'topic' : 
+            case 'sentiment' : 
             case 'news' : display.push(
-                                <MainTable type={type} content={content} handle={this.handle} url={url} updateMain={this.updateMain} defaultError={this.defaultError} /> );
+                                <MainTable type={type} content={content} handle={this.handle} url={url} selectWeekDay={selectWeekDay} updateMain={this.updateMain} defaultError={this.defaultError} /> );
                             break;
             case 'article' : display.push(
                                 <Article article={content} handle={this.handle} url={url} updateMain={this.updateMain} defaultError={this.defaultError} /> );

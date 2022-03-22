@@ -31,8 +31,8 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 - Sample : Massaged news for ETL (BBC news, check below Remarks)
 - ETL : ETL script to extract massaged news, generate metadata, aggregate data for OLAP
 - Deploy : Deployment script
-- News : Backend server for sentiment analysis, UI request handling
-- Client : Frontend UI for sentiment analysis
+- News : Reporting engine for Client UI
+- Client : UI for sentiment analysis
 - Unit Test : Unit testing script
 - Tools : Tools for encryption, encoding and local server script for testing
 - Setup : Setup script for database initialization
@@ -79,10 +79,10 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 -- /category/<date>/<category>
 -- /tag
 -- /tag/<date>
--- /tag/<date>/<category>
+-- /tag/<date>/<tag>
 -- /topic
 -- /topic/<date>
--- /topic/<date>/<category>
+-- /topic/<date>/<topic>
 
 - Search
 -- /search
