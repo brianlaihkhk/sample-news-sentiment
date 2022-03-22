@@ -32,13 +32,14 @@ class Article extends Component {
         var topicItems = [];
         var tagItems = [];
         var sentimentItem = sentiment.length > 0 ? sentiment[0] : 'neu';
+        var sentimentItemText = sentimentItem === 'pos' ? 'Positive' : sentimentItem === 'neg' ? 'Negative' : 'Neutral'
 
         for (var item of tag) {
-            tagItems.push(<span><a href='#' onClick={(e) => this.searchTag(e, item['value'])}>{item['value']}</a> ,</span>);
+            tagItems.push(<span><a href='#' onClick={(e) => this.searchTag(e, item['value'])}>{item['value']}</a> , </span>);
         }
      
         for (var item of topic) {
-            topicItems.push(<span><a href='#' onClick={(e) => this.searchTopic(e, item['value'])}>{item['value']}</a> ,</span>);
+            topicItems.push(<span><a href='#' onClick={(e) => this.searchTopic(e, item['value'])}>{item['value']}</a> , </span>);
         } 
         return (
             <div className="container mt-5">
@@ -47,7 +48,7 @@ class Article extends Component {
                     <article className="blog-card">
                         <div className="blog-card__info">
                             <h5>{news_item['news_day']}, Category : <a href='#' onClick={(e) => this.searchCategory(e, news_item['category'])}>{news_item['category']}</a>, Sentiment : <a href='#' onClick={(e) => this.searchSentiment(e, sentimentItem)}>
-                                {sentimentItem}
+                                {sentimentItemText}
                             </a></h5>
                             <h2>{news_item['news_title']}</h2>
                             <p>{news_item['news_context']}</p>

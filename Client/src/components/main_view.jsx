@@ -52,8 +52,11 @@ class MainView extends Component {
 
     render() {
         var display = this.handleView();
+        var url = this.props.state.url;
         return (
             <>
+                <div>Listing {url} :</div>
+
                 {display}
             </>
             

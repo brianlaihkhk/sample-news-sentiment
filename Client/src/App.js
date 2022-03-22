@@ -11,7 +11,7 @@ class App extends Component {
   state = {
     content : 'main',
     type : 'main',
-    url : null
+    url : '/'
   };
 
   handleCall = (e, url, method, request_header, successHandler, notSuccessHandler, successType) => {

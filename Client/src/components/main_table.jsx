@@ -62,7 +62,7 @@ class MainTable extends Component {
                 if (type === 'news' && key === 'year'){
                     outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, 'category', row['year'], null, null, null, null)}>{value}</a></span></td>);
                 } else if (type === 'news'){
-                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.searchClick(e, 'date', row['year'], null, null, null, value)}>{value}</a></span></td>);
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.searchClick(e, 'date', row['year'], null, null, null, null)}>{value}</a></span></td>);
                 } else if (key === 'year'){
                     outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], null, null, null, null )}>{value}</a></span></td>);
                 } else if (key === 'month'){
@@ -94,7 +94,6 @@ class MainTable extends Component {
         var body = this.getTableBody(content, type, url);
         return (
             <div className="wrapper">
-                Listing {url} :
                 <table className="main_table">
                     <thead>
                         <tr className="main_table">

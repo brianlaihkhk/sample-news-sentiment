@@ -1,0 +1,124 @@
+swagger: '2.0'
+info:
+  description: |
+    Order and queue system
+  version: 1.0.0
+  title: Order and queue system
+  contact:
+    email: brianlaihkhk@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+tags:
+- name: order
+  description: Order Related endpoint
+- name: item
+  description: Item Related endpoint
+- name: session
+  description: Session Related endpoint
+
+# schemes:
+# - http
+paths:
+  /session:
+    get:
+      tags:
+      - session
+      summary: Obtain session
+      operationId: obtainSession
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+
+      description: Get session
+
+  /item:
+    get:
+      tags:
+      - item
+      description: Obtain item information
+      operationId: obtainItem
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain item information
+
+  /status:
+    get:
+      tags:
+      - session
+      description: Obtain session status
+      operationId: obtainStatus
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: Session
+        description: Session Token
+        required: true
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Session waiting status
+
+  /order:
+    post:
+      tags:
+      - order
+      description: User order
+      operationId: subitOrder
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        type: string
+        name: Session
+        description: Session Token
+        required: true
+      - in: header
+        type: string
+        name: Authorization
+        description: JWT encrypted message
+        required: true
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: User login
+
+definitions:
+  Response:
+    type: object
+    properties:
+      isSuccess:
+        type: boolean
+        format: boolean
+      payload:
+        type: object
+        format: object
+      error:
+        $ref: '#/definitions/Error'
+
+  Error:
+    type: object
+    properties:
+      errorCode:
+        type: integer
+        format: integer
+      errorMessage:
+        type: string
+        format: string
+
+
+# Added by API Auto Mocking Plugin
+basePath: /
+schemes:
+ - https
+ - http
