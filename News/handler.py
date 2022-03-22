@@ -72,3 +72,12 @@ class Handler():
         elif category:
             query = {'CATEGORY' : category}
         return query
+
+    def handle_news_stat(self, date, category):
+        query = {}
+        if date and category:
+            query.update(self.handle_date(date))
+            query['CATEGORY'] = category
+        elif date:
+            query.update(self.handle_date(date))
+        return query

@@ -92,20 +92,28 @@ class News(Base):
 
     NEWS_UUID = Column(String, primary_key=True)
     NEWS_DAY = Column(String, nullable=False)
+    SORT_YEAR = Column(String, nullable=False)
+    SORT_MONTH = Column(String, nullable=False)
+    SORT_DAY = Column(String, nullable=False)
     DAY_OF_WEEK = Column(String, nullable=False)
     NEWS_TITLE = Column(String, nullable=False)
     CATEGORY = Column(String, nullable=False)
     NEWS_ABSTRACT = Column(String, nullable=False)
     NEWS_CONTEXT = Column(LONGTEXT, nullable=False)
+    NEWS_COUNT = Column(Integer, nullable=False)
 
     def __init__(self, news_uuid, news_day, week_day, title, context, category):
         self.NEWS_UUID = news_uuid
         self.DAY_OF_WEEK = week_day
+        self.SORT_YEAR = time.strftime("%Y", time.strptime(news_day, "%Y%m%d"))
+        self.SORT_MONTH = time.strftime("%m", time.strptime(news_day, "%Y%m%d"))
+        self.SORT_DAY = time.strftime("%d", time.strptime(news_day, "%Y%m%d"))
         self.NEWS_DAY = news_day
         self.NEWS_TITLE = title
         self.NEWS_CONTEXT = context
         self.NEWS_ABSTRACT = ' '.join(context.split(' ')[:30])
         self.CATEGORY = category
+        self.NEWS_COUNT = 1
 
 class NewsMap(Base):
     __tablename__ = 'NEWS_MAP'

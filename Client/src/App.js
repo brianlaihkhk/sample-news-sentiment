@@ -1,27 +1,20 @@
 import React, { Component } from "react";
-import OrderForm from "./components/order_form";
-import QueueStatus from "./components/queue_status";
-import ErrorResponse from "./components/error_response";
-import SuccessSubmit from "./components/success_submit";
+import SelectMenu from "./components/select_menu";
+import MainView from "./components/main_view";
+import Search from "./components/search";
+import Category from "./components/category";
 
-const HOST = 'http://localhost:8081';
+const HOST = 'http://localhost:8000';
 
 class App extends Component {
 
   state = {
-    menu : null,
-    subMenu : null,
-    center : null,
-    right : null,
-    error : null
+    content : null,
+    type : 'main',
+    url : null
   };
 
-  componentDidMount() {
-    this.handleCall (null, HOST + "/item", "GET", null, this.handleItem, this.notSucessDisplayError);
-    this.handleCall (null, HOST + "/session", "GET", null, this.handleSession, this.notSucessDisplayError);
-  }
-
-  handleCall = (e, url, method, request_header, successHandler, notSuccessHandler) => {
+  handleCall = (e, url, method, request_header, successHandler, notSuccessHandler, successType) => {
     if (e != null) {
       e.preventDefault();
     }
@@ -29,7 +22,7 @@ class App extends Component {
     var headers = {}
     Object.assign(headers, request_header)
 
-    fetch(url, {
+    fetch(HOST + url, {
       method: method,
       headers: headers,
       mode: 'cors', // no-cors, *cors, same-origin
@@ -39,67 +32,42 @@ class App extends Component {
       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     })
     .then(response => response.json())
-    .then(response => response.success ? successHandler(response.payload) : notSuccessHandler(response.payload))
+    .then(response => response.success ? successHandler(response.payload, url, successType) : notSuccessHandler(response.payload))
     .catch(err => this.exceptionHandler(err));
   }
 
-  handleItem = (payload) => {
-    this.setState({ items : payload });
-  }
-
-  handleQueue = (payload) => {
-    this.setState({ queue : payload });
-    if (payload["in_queue"]){
-      setTimeout(() => this.handleCall(null, HOST + "/status", "GET", {"Session" : this.state.session.session}, this.handleQueue, this.notSucessDisplayError), 5000);
-    } else {
-      this.setState({ milestone : 2 });
-    }
-  }
-
-  submitOrder = (e, header) =>  {
-    this.handleCall(e, HOST + "/order", "POST", header, this.successSubmit, this.notSucessDisplayError);
-  }
-
-  successSubmit = (payload) => {
-    this.setState({ order : payload, milestone : 3 });
-  }
-
-  handleSession = (payload) => {
-    this.setState({ session : payload });
-    this.handleCall(null, HOST + "/status", "GET", {"Session" : payload.session}, this.handleQueue, this.notSucessDisplayError);
+  updateMainView = (payload, url, type) => {
+    this.setState({ mainContent : payload , url: url, mainType : type });
   }
 
   exceptionHandler = (err) => {
     console.log("exceptionHandler");
-    this.setState({ error : "Internal Server Error", milestone : 0 });
+    console.log(err);
+    this.setState({ mainContent : "Internal Server Error.  Please retry again.", mainType : 'error' });
   }
 
   notSucessDisplayError = (payload) => {
     console.log("notSucessDisplayError");
     console.log(payload);
-    this.setState({ error : payload != null ? payload : "Connection Error", milestone : 0 });
+    this.setState({ error : payload != null ? mainContent : "Connection Error. Please retry again.", mainType : 'error' });
   }
 
   render() {
-    const {menu, subMenu, center, right, error} = this.state;
+    const {content, type, url} = this.state;
+
     return (
       <div className="main__wrap">
         <main className="container">
           <div class="header">
-              <h1>Tutorial Republic</h1>
-              <h1>Tutorial Republic</h1>
+              <SelectMenu handle={this.handleCall} updateMain={this.updateMainView} defaultError={this.notSucessDisplayError} />
           </div>
           <div class="wrapper clearfix">
             <div class="section">
-                <h2>Welcome to our site</h2>
-                <p>Here you will learn how to create websites...</p>
+              <MainView type={type} content={content} url={url} handle={this.updateMainView} updateMain={success} defaultError={this.notSucessDisplayError} />
             </div>
             <div class="nav">
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
+              <Search handle={this.handleCall} updateMain={this.updateMainView} defaultError={this.notSucessDisplayError} />
+              <Category handle={this.handleCall} updateMain={this.updateMainView} defaultError={this.notSucessDisplayError} />
             </div>
           </div>
         </main>
