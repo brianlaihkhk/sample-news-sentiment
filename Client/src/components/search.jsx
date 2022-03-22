@@ -24,8 +24,7 @@ class Search extends Component {
 
     validateForm = (e) => {
         if (this.state.userSearchType && !(this.state.userSearchType === 'select') && this.state.userSearchText){
-            console.log(this.state.userSearchType);
-            console.log(this.state.userSearchText);
+
             this.addCriteria(this.state.userSearchType, this.state.userSearchText);
             this.setState({userSearchType: null, userSearchText : null});
             document.getElementById("searchForm").reset();
@@ -52,7 +51,6 @@ class Search extends Component {
 
 
     submitCriteria = (e) => {
-        console.log(this.state.criteria.size)
         if (this.state.criteria.size > 0){
             const params = new URLSearchParams(this.state.criteria);
             this.handle(null, "/search?" + params.toString(), "GET", null, this.updateMain, this.defaultError, 'search');
@@ -63,10 +61,8 @@ class Search extends Component {
     printCurrentCriteria = (e) => {
         var output = []
         var enteries = [...this.state.criteria.entries()]
-        console.log(enteries);
 
         enteries.forEach((item) => {
-            console.log(item);
             var key = item[0];
             var value = item[1];
             output.push(<p>{key} : {value}</p>);

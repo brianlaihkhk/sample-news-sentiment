@@ -1,6 +1,7 @@
 import response
 from orm import AggregateCategory, AggregateSentiment, AggregateTopic, AggregateTag, News, NewsMap
 from sqlalchemy import or_, and_, func, text
+import logging
 
 class Query:
     def __init__(self, db):
@@ -39,7 +40,6 @@ class Query:
         if len(news_result) == 1 and (criteria.get('NEWS_UUID') is not None) :
 
             map_query_parameter = self.get_news_map_parameter(criteria, NewsMap)
-            print(map_query_parameter)
             news_map_result = self.db_connection.session.query(NewsMap).with_entities(*map_query_parameter.get('with_entities')).filter(and_(*map_query_parameter.get('filter'))).all()
 
             result = {'news' : result, 'metadata' : [ dict(zip(map_query_parameter.get('key'), row)) for row in news_map_result]}

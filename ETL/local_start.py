@@ -57,7 +57,6 @@ class FileContext:
         return file_list
 
     def save_scanned_file(self, file, context):
-        print(context)
         if context != None and len(context) > 0 :
             try:
                 file = open(file, 'a', buffering=1)
@@ -121,7 +120,6 @@ class FileContext:
                 self.db_connection.session.add(AggregateTopic(key[0], key[1], key[2], aggregate_topic[key]))
             else :
                 result.NEWS_COUNT += aggregate_topic[key]
-            print('aggregate_topic : ' + key[0] + ' ' + key[1] + ' ' + key[2] + ' ' + str(aggregate_topic[key]))
             logging.info('aggregate_topic : ' + key[0] + ' ' + key[1] + ' ' + key[2] + ' ' + str(aggregate_topic[key]))
 
     def process_aggregate_tags(self, aggregate_tags):
@@ -133,7 +131,6 @@ class FileContext:
                 self.db_connection.session.add(AggregateTag(key[0], key[1], key[2], aggregate_tags[key]))
             else :
                 result.NEWS_COUNT += aggregate_tags[key]
-            print('aggregate_tags : ' + key[0] + ' ' + key[1] + ' ' + key[2] + ' ' + str(aggregate_tags[key]))
             logging.info('aggregate_tags : ' + key[0] + ' ' + key[1] + ' ' + key[2] + ' ' + str(aggregate_tags[key]))
 
     def process_news(self, news_list):
