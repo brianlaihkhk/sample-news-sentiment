@@ -4,93 +4,105 @@ import React, {Component} from "react";
 class MainTable extends Component {
     constructor(props){
         super(props);
-        this.type = props.type;
-        this.content = props.content;
         this.handle = props.handle;
         this.updateMain = props.updateMain;
         this.defaultError = props.defaultError;
-        this.url = props.url;
     }
 
 
     dataClick = (e, type, year, month, day, weekDay, spec) => {
-        date_query = (weekDay ? weekDay : "" ) + "-" + (year ? year : "" ) + "-" + (month ? month : "" ) + "-" + (day ? day : "" )
+        var date_query = (weekDay ? weekDay : "" ) + "-" + (year ? year : "" ) + "-" + (month ? month : "" ) + "-" + (day ? day : "" )
 
         if (spec){
-            this.handle(null, "/" + type + "/" + date_query + "/" + spec, "GET", null, this.updateMain, this.defaultError, e.target.name)  
+            this.handle(null, "/" + type + "/" + date_query + "/" + spec, "GET", null, this.updateMain, this.defaultError, type)  
         } else {
-            this.handle(null, "/" + type + "/" + date_query, "GET", null, this.updateMain, this.defaultError, e.target.name) 
+            this.handle(null, "/" + type + "/" + date_query, "GET", null, this.updateMain, this.defaultError, type) 
         }
     }
 
     searchClick = (e, type, year, month, day, weekDay, spec) => {
-        query = (weekDay != null ? weekDay : "" ) + "-" + (year != null ? year : "" ) + "-" + (month != null ? month : "" ) + "-" + (day != null ? day : "" )
+        var query = (weekDay != null ? weekDay : "" ) + "-" + (year != null ? year : "" ) + "-" + (month != null ? month : "" ) + "-" + (day != null ? day : "" );
 
-        this.handle(null, "/search?" + type + "=" + spec + '&date=' + query, "GET", null, this.updateMain, this.defaultError, 'search')  
+        if (spec) {
+            this.handle(null, "/search?" + type + "=" + spec + '&date=' + query, "GET", null, this.updateMain, this.defaultError, 'search')
+        } else {
+            this.handle(null, "/search?" + 'date=' + query, "GET", null, this.updateMain, this.defaultError, 'search') 
+        }
     }
 
-    getTableHeader = () => {
-        output = []
-        if (this.content.length > 0){
-            for (key in Object.keys(this.content[0])){
-                output.push(<th>{key}</th>);
+    getTableHeader = (content) => {
+        var output = []
+        if (content.length > 0){
+            for (var key of Object.keys(this.props.content[0])){
+                output.push(<th className="main_table">{key}</th>);
             }
         }
         return output;
     }
 
     convertDayString = (dateString) => {
-        spec = dateString.split('-');
-        return {'year' : spec[1], 'month' : spec[2], 'day' : spec[3] : 'week_day' : spec[0]}
+        var spec = dateString.split('-');
+        return {'year' : spec[1], 'month' : spec[2], 'day' : spec[3] , 'week_day' : spec[0]}
     }
 
-    getTableBody = () => {
-        output = [];
-        urlSplit = this.url.substring(0, this.url.indexOf('?')).split('/');
-        dayString = urlSplit.length == 3 ? urlSplit[2] : null;
-        dateSpec = dayString ? this.convertDayString(dayString) : {};
+    getTableBody = (content, type, url) => {
 
-        for (row in this.content) {
-            outputRow = []
-            for (item in row) {
-                if (this.type == 'news' && item == row['category']){
-                    outputRow.push(<td><span><a onClick={(e) => this.dataClick(e, 'category', row['year'], null, null, null, item)}>{item}</a></span></td>);
-                } else if (this.type == 'news'){
-                    outputRow.push(<td><span><a onClick={(e) => this.searchClick(e, 'date', row['year'], null, null, null, item)}>{item}</a></span></td>);
-                } else if (item == row['year']){
-                    outputRow.push(<td><span><a onClick={(e) => this.dataClick(e, this.type, row['year'], null, null, null, null )}>{item}</a></span></td>);
-                } else if (item == row['month']){
-                    outputRow.push(<td><span><a onClick={(e) => this.dataClick(e, this.type, row['year'], row['month'], null, null, null )}>{item}</a></span></td>);
-                } else if (item == row['day']){
-                    outputRow.push(<td><span><a onClick={(e) => this.dataClick(e, this.type, row['year'], row['month'], row['day'], null, null )}>{item}</a></span></td>);
-                } else if (item == 'week_day'){
-                    outputRow.push(<td><span><a onClick={(e) => this.dataClick(e, this.type, row['year'], row['month'], row['day'], row['week_day'], null )}>{item}</a></span></td>);
-                } else if (item == 'category' || item == 'topic' || item == 'tag' || item == 'sentiment' ){
-                    outputRow.push(<td><span><a onClick={(e) => this.dataClick(e, this.type, dateSpec['year'], dateSpec['month'], dateSpec['day'], dateSpec['week_day'], item )}>{item}</a></span></td>);
-                } else if (item == 'news_count' ){
-                    outputRow.push(<td><span><a onClick={(e) => this.searchClick(e, this.type, dateSpec['year'], dateSpec['month'], dateSpec['day'], dateSpec['week_day'], row[this.type])}>{item}</a></span></td>);
+        var output = [];
+        var urlSplit = url.substring(0, url.indexOf('?')).split('/');
+        var dayString = urlSplit.length === 3 ? urlSplit[2] : null;
+        var dateSpec = dayString ? this.convertDayString(dayString) : {};
+
+        content.forEach((row) => {
+            var outputRow = []
+
+            Object.entries(row).forEach((item) => {
+                var key = item[0];
+                var value = item[1];
+
+                if (type === 'news' && key === 'year'){
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, 'category', row['year'], null, null, null, null)}>{value}</a></span></td>);
+                } else if (type === 'news'){
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.searchClick(e, 'date', row['year'], null, null, null, value)}>{value}</a></span></td>);
+                } else if (key === 'year'){
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], null, null, null, null )}>{value}</a></span></td>);
+                } else if (key === 'month'){
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], row['month'], null, null, null )}>{value}</a></span></td>);
+                } else if (key === 'day'){
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], row['month'], row['day'], null, null )}>{value}</a></span></td>);
+                } else if (key === 'week_day'){
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], row['month'], row['day'], row['week_day'], null )}>{value}</a></span></td>);
+                } else if (key === 'category' || key === 'topic' || key === 'tag' || key === 'sentiment' ){
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], row['month'], row['day'], row['week_day'], value )}>{value}</a></span></td>);
+                } else if (key === 'news_count' ){
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.searchClick(e, type, row['year'], row['month'], row['day'], row['week_day'], row[type])}>{value}</a></span></td>);
                 } else{
-                    outputRow.push(<td><span>{item}</span></td>);
+                    outputRow.push(<td className="main_table"><span>{value}</span></td>);
                 }
 
 
-            }
+            });
             output.push(<tr>{outputRow}</tr>);
-        }
+        });
+        return output;
+        
     };
 
     render() {
+        const {content, type, url} = this.props; 
 
+        var header = this.getTableHeader(content);
+        var body = this.getTableBody(content, type, url);
         return (
-            <div class="wrapper">
-                <table>
+            <div className="wrapper">
+                Listing {url} :
+                <table className="main_table">
                     <thead>
-                        <tr>
-                            {this.getTableHeader()}
+                        <tr className="main_table">
+                            {header}
                         </tr>
                     </thead>
-                    <tbody>
-                        {this.getTableBody()}
+                    <tbody className="main_table">
+                        {body}
                     </tbody>
                 </table>
             </div>

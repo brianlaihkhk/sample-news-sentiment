@@ -32,8 +32,8 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 - ETL : ETL script to extract massaged news, generate metadata, aggregate data for OLAP
 - Documentation : Documentation
 - Deploy : Deployment script
-- News : Backend server for sentiment analysis / BI illustration
-- Client : Frontend UI for sentiment analysis / BI illustration
+- News : Backend server for sentiment analysis, UI request handling
+- Client : Frontend UI for sentiment analysis
 - Tools : Tools for encryption, encoding and local server script for testing
 - Setup : Setup script for database initialization
 

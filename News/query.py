@@ -48,20 +48,28 @@ class Query:
 
     def get_search(self, criteria) :
         news_criteria = criteria.copy()
+        metadata_criteria = criteria.copy()
         news_uuid_list = ['dummy']
 
-        if not (criteria.get('CATEGORY_LIST') or criteria.get('CATEGORY')) :
-            criteria.update({'NEWS_UUID' : '%'})
+        if criteria.get('CATEGORY_LIST'):
+            del metadata_criteria['CATEGORY_LIST']
+        if criteria.get('CATEGORY'):
+            del metadata_criteria['CATEGORY']
 
-            map_query_parameter = self.get_news_map_parameter(criteria, NewsMap)
-
-            news_map_result = self.db_connection.session.query(NewsMap).with_entities(*map_query_parameter.get('with_entities')).filter(and_(*map_query_parameter.get('filter'))).all()
-            result_set = [ dict(zip(map_query_parameter.get('key'), row)) for row in news_map_result]
-
-            news_criteria.update({'NEWS_UUID_LIST' : news_uuid_list + [ row['uuid'] for row in result_set]})
-        else:
+        if criteria.get('CATEGORY_LIST') or criteria.get('CATEGORY') :
             news_criteria.update({'NEWS_UUID' : '%'})
 
+        # news metadata search
+        metadata_criteria.update({'NEWS_UUID' : '%'})
+
+        map_query_parameter = self.get_news_map_parameter(metadata_criteria, NewsMap)
+
+        news_map_result = self.db_connection.session.query(NewsMap).with_entities(*map_query_parameter.get('with_entities')).filter(and_(*map_query_parameter.get('filter'))).all()
+        result_set = [ dict(zip(map_query_parameter.get('key'), row)) for row in news_map_result]
+
+        news_criteria.update({'NEWS_UUID_LIST' : news_uuid_list + [ row['uuid'] for row in result_set]})
+
+        # news search
         query_parameter = self.get_news_parameter(news_criteria, News)
 
         news_result = self.db_connection.session.query(News).with_entities(*query_parameter.get('with_entities')).filter(and_(*query_parameter.get('filter'))).order_by(*query_parameter.get('order_by')).limit(self.query_limit).all()
@@ -199,28 +207,23 @@ class Query:
             filter.append(orm_class.DAY_OF_WEEK.like(criteria.get('WEEK_DAY')))
 
         if criteria.get('TAG'):
-            filter.append(orm_class.NEWS_METADATA_KEY == 'tag')
-            filter.append(orm_class.NEWS_METADATA_VALUE == criteria.get('CATEGORY'))
+            filter.append(and_(orm_class.NEWS_METADATA_KEY == 'tag', orm_class.NEWS_METADATA_VALUE == criteria.get('TAG')))
 
         if criteria.get('SENTIMENT'):
-            filter.append(orm_class.NEWS_METADATA_KEY == 'sentiment')
-            filter.append(orm_class.NEWS_METADATA_VALUE == criteria.get('SENTIMENT'))
+            filter.append(and_(orm_class.NEWS_METADATA_KEY == 'sentiment', orm_class.NEWS_METADATA_VALUE == criteria.get('SENTIMENT')))
 
         if criteria.get('TOPIC'):
-            filter.append(orm_class.NEWS_METADATA_KEY == 'topic')
-            filter.append(orm_class.NEWS_METADATA_VALUE == criteria.get('TOPIC'))
+            filter.append(and_(orm_class.NEWS_METADATA_KEY == 'topic', orm_class.NEWS_METADATA_VALUE == criteria.get('TOPIC')))
 
         if criteria.get('TAG_LIST'):
-            filter.append(orm_class.NEWS_METADATA_KEY == 'tag')
-            filter.append(orm_class.NEWS_METADATA_VALUE.in_(criteria.get('TAG_LIST')))
+            filter.append(and_(orm_class.NEWS_METADATA_KEY == 'tag', orm_class.NEWS_METADATA_VALUE.in_(criteria.get('TAG_LIST'))))
 
         if criteria.get('SENTIMENT_LIST'):
-            filter.append(orm_class.NEWS_METADATA_KEY == 'sentiment')
-            filter.append(orm_class.NEWS_METADATA_VALUE.in_(criteria.get('SENTIMENT_LIST')))
+            filter.append(and_(orm_class.NEWS_METADATA_KEY == 'sentiment', orm_class.NEWS_METADATA_VALUE.in_(criteria.get('SENTIMENT_LIST'))))
 
         if criteria.get('TOPIC_LIST'):
-            filter.append(orm_class.NEWS_METADATA_KEY == 'topic')
-            filter.append(orm_class.NEWS_METADATA_VALUE.in_(criteria.get('TOPIC_LIST')))
+            filter.append(and_(orm_class.NEWS_METADATA_KEY == 'topic', orm_class.NEWS_METADATA_VALUE.in_(criteria.get('TOPIC_LIST'))))
+
 
         return { 'with_entities' : with_entities, 'filter' : filter, 'key' : key }
 
@@ -286,7 +289,7 @@ class Query:
             key.append('topic')
             require_base = False
 
-        if require_base and (not (criteria.get('DATE') or criteria.get('DAY') or criteria.get('WEEK_DAY'))):
+        if require_base: # and (not (criteria.get('DATE') or criteria.get('DAY') or criteria.get('WEEK_DAY'))):
             group_by.append(base_column)
             with_entities.append(base_column)
             key.append(base_key)
