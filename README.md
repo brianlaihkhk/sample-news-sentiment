@@ -21,7 +21,7 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 ### Framework 
 
 - TextBlob
-   - Text-classification ML algorithm : Naive Bayes
+   - Text-classification ML model : Naive Bayes
    - NN / NNP extractor : Conll Extractor
 - sqlAlchemy
 - Flask
@@ -65,22 +65,22 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 
 - News
    - /news
-   - /news/<category>
-   - /news/<category>/<uuid>
+   - /news/`category`
+   - /news/`category`/`uuid`
 
 - Sentiment
    - /topic
-   - /topic/<date>
-   - /topic/<date>/<topic>
+   - /topic/`date`
+   - /topic/`date`/`topic`
    - /category
-   - /category/<date>
-   - /category/<date>/<category>
+   - /category/`date`
+   - /category/`date`/`category`
    - /tag
-   - /tag/<date>
-   - /tag/<date>/<category>
+   - /tag/`date`
+   - /tag/`date`/`category`
    - /topic
-   - /topic/<date>
-   - /topic/<date>/<category>
+   - /topic/`date`
+   - /topic/`date`/`category`
 
 - Search
    - /search
