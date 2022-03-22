@@ -43,6 +43,8 @@ code {
 }
 .section {
   width: 80%;
+  height: 80%;
+  overflow-y: auto;
 }
 
 .main_table {

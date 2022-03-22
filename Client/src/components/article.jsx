@@ -16,6 +16,7 @@ class Article extends Component {
         this.handle(null, "/search/?category=" + category, "GET", null, this.updateMain, this.defaultError, 'search')  
     }
     searchSentiment = (e, sentiment) => {
+        console.log(sentiment);
         this.handle(null, "/search/?sentiment=" + sentiment, "GET", null, this.updateMain, this.defaultError, 'search')  
     }
     searchTopic = (e, topic) => {
@@ -40,12 +41,12 @@ class Article extends Component {
             topicItems.push(<span><a href='#' onClick={(e) => this.searchTopic(e, item['value'])}>{item['value']}</a> ,</span>);
         } 
         return (
-            <div class="container mt-5">
-                <div class="row">
-                    <div class="col-12">
-                    <article class="blog-card">
-                        <div class="blog-card__info">
-                            <h5>{news_item['news_day']}, Category : <a href='#' onClick={(e) => this.searchCategory(e, news_item['category'])}>{news_item['category']}</a>, Sentiment : <a href='#' onClick={(e) => this.searchSentiment(e, {sentimentItem})}>
+            <div className="container mt-5">
+                <div className="row">
+                    <div className="col-12">
+                    <article className="blog-card">
+                        <div className="blog-card__info">
+                            <h5>{news_item['news_day']}, Category : <a href='#' onClick={(e) => this.searchCategory(e, news_item['category'])}>{news_item['category']}</a>, Sentiment : <a href='#' onClick={(e) => this.searchSentiment(e, sentimentItem)}>
                                 {sentimentItem}
                             </a></h5>
                             <h2>{news_item['news_title']}</h2>
