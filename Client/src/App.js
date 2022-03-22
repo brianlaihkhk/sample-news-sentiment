@@ -11,14 +11,8 @@ class App extends Component {
   state = {
     content : null,
     type : 'main',
+    url : null
   };
-
-  componentDidMount() {
-    this.handleCall (null, HOST + "/item", "GET", null, this.handleItem, this.notSucessDisplayError);
-    this.handleCall (null, HOST + "/session", "GET", null, this.handleSession, this.notSucessDisplayError);
-  }
-
-
 
   handleCall = (e, url, method, request_header, successHandler, notSuccessHandler, successType) => {
     if (e != null) {
@@ -28,7 +22,7 @@ class App extends Component {
     var headers = {}
     Object.assign(headers, request_header)
 
-    fetch(url, {
+    fetch(HOST + url, {
       method: method,
       headers: headers,
       mode: 'cors', // no-cors, *cors, same-origin
@@ -38,12 +32,12 @@ class App extends Component {
       referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     })
     .then(response => response.json())
-    .then(response => response.success ? successHandler(response.payload, successType) : notSuccessHandler(response.payload))
+    .then(response => response.success ? successHandler(response.payload, url, successType) : notSuccessHandler(response.payload))
     .catch(err => this.exceptionHandler(err));
   }
 
-  updateMainView = (payload, type) => {
-    this.setState({ mainContent : payload , mainType : type });
+  updateMainView = (payload, url, type) => {
+    this.setState({ mainContent : payload , url: url, mainType : type });
   }
 
   exceptionHandler = (err) => {
@@ -59,7 +53,7 @@ class App extends Component {
   }
 
   render() {
-    const {content, type} = this.state;
+    const {content, type, url} = this.state;
 
     return (
       <div className="main__wrap">
@@ -69,7 +63,7 @@ class App extends Component {
           </div>
           <div class="wrapper clearfix">
             <div class="section">
-              <MainView type={type} content={content} handle={this.updateMainView} updateMain={success} defaultError={this.notSucessDisplayError} />
+              <MainView type={type} content={content} url={url} handle={this.updateMainView} updateMain={success} defaultError={this.notSucessDisplayError} />
             </div>
             <div class="nav">
               <Search handle={this.handleCall} updateMain={this.updateMainView} defaultError={this.notSucessDisplayError} />

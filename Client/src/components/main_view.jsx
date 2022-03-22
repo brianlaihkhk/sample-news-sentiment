@@ -11,6 +11,7 @@ class MainView extends Component {
         this.handle = props.handle;
         this.updateMain = props.updateMain;
         this.defaultError = props.defaultError;
+        this.url = props.url;
     }
 
     handleView = () => {
@@ -21,32 +22,34 @@ class MainView extends Component {
                             }
                             break;
             case 'category' : display.push(
-                                <MainTable type={this.type} content={this.content} handle={this.handle} updateMain={this.updateMain} defaultError={this.defaultError} /> );
+                                <MainTable type={this.type} content={this.content} handle={this.handle} url={url} updateMain={this.updateMain} defaultError={this.defaultError} /> );
                             break;
             case 'tag' : display.push(
-                                <MainTable type={this.type} content={this.content} handle={this.handle} updateMain={this.updateMain} defaultError={this.defaultError} /> );
+                                <MainTable type={this.type} content={this.content} handle={this.handle} url={url} updateMain={this.updateMain} defaultError={this.defaultError} /> );
                             break;
             case 'topic' : display.push(
-                                <MainTable type={this.type} content={this.content} handle={this.handle} updateMain={this.updateMain} defaultError={this.defaultError} /> );
+                                <MainTable type={this.type} content={this.content} handle={this.handle} url={url} updateMain={this.updateMain} defaultError={this.defaultError} /> );
                             break;
             case 'sentiment' : display.push(
-                                <MainTable type={this.type} content={this.content} handle={this.handle} updateMain={this.updateMain} defaultError={this.defaultError} /> );
+                                <MainTable type={this.type} content={this.content} handle={this.handle} url={url} updateMain={this.updateMain} defaultError={this.defaultError} /> );
                             break;
             case 'news' : display.push(
-                                <MainTable type={this.type} content={this.content} handle={this.handle} updateMain={this.updateMain} defaultError={this.defaultError} /> );
+                                <MainTable type={this.type} content={this.content} handle={this.handle} url={url} updateMain={this.updateMain} defaultError={this.defaultError} /> );
                             break;
+            case 'error' : display.push(
+                                <span>{this.content}</span>);
+                            break;               
+            default :  display.push(
+                <span>Welcome to News Analysis, please select from the menu.</span>);
+
         }
         return display;
     } 
 
-    drill = (e, category, uuid) => {
-        this.handle(null, "/news/" + category + "/" + uuid, "GET", null, this.updateMain, this.defaultError, 'read_news')  
-    }
-
     render() {
         return (
             <div>
-                {this.handleView}
+                {display}
             </div>
             
         );

@@ -84,18 +84,18 @@ def tag(date = None, tag = None):
         logging.error(str(traceback.format_exc()))
         return response.failure("Request failed. " + str(e))
 
-@app.route('/topic', methods=['GET'])
-@app.route('/topic/', methods=['GET'])
-@app.route('/topic/<date>', methods=['GET'])
-@app.route('/topic/<date>/', methods=['GET'])
-@app.route('/topic/<date>/<sentiment>', methods=['GET'])
-@app.route('/topic/<date>/<sentiment>/', methods=['GET'])
+@app.route('/sentiment', methods=['GET'])
+@app.route('/sentiment/', methods=['GET'])
+@app.route('/sentiment/<date>', methods=['GET'])
+@app.route('/sentiment/<date>/', methods=['GET'])
+@app.route('/sentiment/<date>/<sentiment>', methods=['GET'])
+@app.route('/sentiment/<date>/<sentiment>/', methods=['GET'])
 def sentiment(date = None, sentiment = None):
     try:
         query = request_handler.handle_query(date, sentiment, 'SENTIMENT')
         logging.info(query)
         print(query)
-        return response.success(request_handler.query.get_category(query))
+        return response.success(request_handler.query.get_sentiment(query))
     except Exception as e:
         print(traceback.format_exc())
         logging.error(str(traceback.format_exc()))

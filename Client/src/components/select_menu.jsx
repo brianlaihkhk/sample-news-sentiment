@@ -4,32 +4,12 @@ class SelectMenu extends Component {
     constructor(props){
         super(props);
         this.handle = props.handle;
-        this.success = props.success;
-        this.fail = props.fail;
-    }
-
-    
-    processSelection = (payload, type) => {
-        switch (type) {
-            case "news" : output = (
-
-         
-                            );
-                            break;
-            case 'category' : output = (
-
-         
-                                );
-                                break;
-
-            default :
-        }
-
-        this.success(output, )
+        this.updateMain = props.updateMain;
+        this.defaultError = props.defaultError;
     }
 
     menuClick = (e) => {
-        this.handle(null, "/" + e.target.name, "GET", null, this.processSelection, this.fail, e.target.name)  
+        this.handle(null, "/" + e.target.name, "GET", null, this.updateMain, this.defaultError, e.target.name)  
     }
 
     render() {
