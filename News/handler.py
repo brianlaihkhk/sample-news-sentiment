@@ -11,7 +11,7 @@ class Handler():
 
     def handle_search (self, query_string):
         query = {}
-        print(query_string)
+        logging.info(query_string)
         query_components = dict(qc.split("=") for qc in query_string.split("&"))
         if query_components.get("date"):
             query.update(self.handle_date(query_components["date"]))
@@ -55,7 +55,7 @@ class Handler():
         if date and value:
             query = {key : value}
             query.update(self.handle_date(date))
-            print(query)
+            logging.info(query)
         elif date:
             query = {}
             query.update(self.handle_date(date))

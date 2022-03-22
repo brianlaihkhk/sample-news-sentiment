@@ -1,5 +1,6 @@
 import os
 import yaml
+import logging
 
 def convert(input):
     output = {}
@@ -21,3 +22,4 @@ def load_env (file):
             os.environ['APPLICATION_PREFIX'] = env['APPLICATION_PREFIX']
         except yaml.YAMLError as exc:
             print(exc)
+            logging.error(str(exc))
