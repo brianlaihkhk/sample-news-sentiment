@@ -1,25 +1,33 @@
 import os
-import yaml
+import configparser
 import logging
+import getopt
 
-def convert(input):
-    output = {}
-    for i in range(0, len(input)):
-        split = input[i].split("=")
-        output = {**output, split[0]: split[1]}
-    return output
+def load_options (argv):
+    try:
+        opts, _ = getopt.getopt(argv,"e:", ["env-file=", "env_file="])
+        for opt, arg in opts:
+            if opt in ['-e', '--env-file', '--env_file']:
+                load_env(arg)
+
+    except getopt.GetoptError:
+        pass
+
+    if not ('RDS_USERNAME' in os.environ):
+        raise Exception("No environment variable of application config is detected, make sure the file (using --env-file=<file> or -e <file>) or pre-set in environment variables (docker run --env-file=<file> <docker-id>).")
 
 def load_env (file):
     with open(file, "r") as stream:
         try:
-            env = yaml.safe_load(stream)
-            env = convert(env["web"]["environment"])
-            os.environ['RDS_USERNAME'] = env['RDS_USERNAME']
-            os.environ['RDS_PASSWORD'] = env['RDS_PASSWORD']
-            os.environ['RDS_HOST'] = env['RDS_HOST']
-            os.environ['RDS_DEFAULT_DB'] = env['RDS_DEFAULT_DB']
-            os.environ['RDS_DB_TYPE'] = env['RDS_DB_TYPE']
-            os.environ['APPLICATION_PREFIX'] = env['APPLICATION_PREFIX']
-        except yaml.YAMLError as exc:
+            parser = configparser.RawConfigParser()
+            parser.read(file)
+            os.environ['RDS_USERNAME'] = parser.get('config', 'RDS_USERNAME')
+            os.environ['RDS_PASSWORD'] = parser.get('config', 'RDS_PASSWORD')
+            os.environ['RDS_HOST'] = parser.get('config', 'RDS_HOST')
+            os.environ['RDS_DEFAULT_DB'] = parser.get('config', 'RDS_DEFAULT_DB')
+            os.environ['RDS_DB_TYPE'] = parser.get('config', 'RDS_DB_TYPE')
+            os.environ['SERVER_HOST'] = parser.get('config', 'SERVER_HOST')
+            os.environ['SERVER_PORT'] = parser.get('config', 'SERVER_PORT')
+        except Exception as exc:
             print(exc)
             logging.error(str(exc))

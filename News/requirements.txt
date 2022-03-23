@@ -8,3 +8,4 @@ sqlalchemy-redshift==0.8.9
 psycopg2-binary==2.9.3
 textblob==0.17.1
 nltk==3.7
+configparser==5.2.0

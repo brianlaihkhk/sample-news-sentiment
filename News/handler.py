@@ -6,7 +6,6 @@ import os
 class Handler():
 
     def __init__(self, db):
-        self.application_prefix = os.environ['APPLICATION_PREFIX']
         self.query = Query(db)
 
     def handle_search (self, query_string):

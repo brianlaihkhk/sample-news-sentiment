@@ -4,7 +4,7 @@ import yaml
 import datetime
 import random
 import uuid
-from misc import load_env
+from misc import load_options
 import sys
 from db import Database
 import os
@@ -18,7 +18,7 @@ class NoAliasDumper(yaml.SafeDumper):
 class FileContext:
     def __init__(self, path, category):
         self.path = path
-        self.scanned = './scanned.txt'
+        self.scanned = os.environ['SCANNED_FILE']
         self.category = category
         self.db_connection = Database().db
 
@@ -155,7 +155,7 @@ class FileContext:
                 raise Exception('Unable to process file : ' + news.path)
 
 if __name__ == "__main__":
-    load_env(sys.argv[1])
+    load_options(sys.argv[1:])
     FileContext("../Sample/bbc/business", 'business').process()
     FileContext("../Sample/bbc/entertainment", 'entertainment').process()
     FileContext("../Sample/bbc/politics", 'politics').process()

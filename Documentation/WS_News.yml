@@ -1,0 +1,315 @@
+swagger: '2.0'
+info:
+  description: |
+    News Sentiment
+  version: 1.0.0
+  title: News Sentiment
+  contact:
+    email: brianlaihkhk@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+tags:
+- name: article
+  description: News article Related endpoint
+- name: news
+  description: News statistic Related endpoint
+- name: topic
+  description: Topic statistic Related endpoint
+- name: sentiment
+  description: Sentiment Related endpoint
+- name: tag
+  description: Tag statistic Related endpoint
+- name: category
+  description: Category Related endpoint
+
+# schemes:
+# - http
+paths:
+  /news:
+    get:
+      tags:
+      - news
+      summary: Obtain news statistics
+      operationId: obtainNewsStatistics
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+
+      description: Get news statistics
+
+  /news/{category}:
+    get:
+      tags:
+      - article
+      summary: Obtain news article abstract list
+      operationId: obtainArticleAbstract
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+
+      description: Get news article abstract list
+
+  /news/{category}/{uuid}:
+    get:
+      tags:
+      - article
+      summary: Obtain news article
+      operationId: obtainArticle
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+
+      description: Get news article
+
+  /topic:
+    get:
+      tags:
+      - topic
+      description: Obtain topic statistics
+      operationId: obtainTopicStatistics
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain topic statistics
+
+  /topic/{date}:
+    get:
+      tags:
+      - topic
+      description: Obtain topic statistics by date query (in weekday-year-month-day format)
+      operationId: obtainTopicStatisticsDate
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain topic statistics by date query
+
+  /topic/{date}/{topic}:
+    get:
+      tags:
+      - topic
+      description: Obtain topic statistics by date (in weekday-year-month-day format) and topic name query
+      operationId: obtainTopicStatisticsDateTopic
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain topic statistics by date and topic name query
+
+  /tag:
+    get:
+      tags:
+      - tag
+      description: Obtain tag statistics
+      operationId: obtainTagStatistics
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain tag statistics
+
+  /tag/{date}:
+    get:
+      tags:
+      - tag
+      description: Obtain tag statistics by date query (in weekday-year-month-day format)
+      operationId: obtainTagStatisticsDate
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain tag statistics by date query
+
+  /tag/{date}/{tag}:
+    get:
+      tags:
+      - tag
+      description: Obtain tag statistics by date (in weekday-year-month-day format) and tag name query
+      operationId: obtainTagStatisticsDateTag
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain tag statistics by date and tag name query
+    
+      
+
+  /sentiment:
+    get:
+      tags:
+      - sentiment
+      description: Obtain sentiment statistics
+      operationId: obtainSentimentStatistics
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain sentiment statistics
+
+  /sentiment/{date}:
+    get:
+      tags:
+      - sentiment
+      description: Obtain sentiment statistics by date query (in weekday-year-month-day format)
+      operationId: obtainSentimentStatisticsDate
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain sentiment statistics by date query
+
+  /sentiment/{date}/{sentiment}:
+    get:
+      tags:
+      - sentiment
+      description: Obtain sentiment statistics by date (in weekday-year-month-day format) and sentiment name query
+      operationId: obtainSentimentStatisticsDateSentiment
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain sentiment statistics by date and sentiment name query
+
+
+  /category:
+    get:
+      tags:
+      - category
+      description: Obtain category statistics
+      operationId: obtainCategoryStatistics
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain category statistics
+
+  /category/{date}:
+    get:
+      tags:
+      - category
+      description: Obtain category statistics by date query (in weekday-year-month-day format)
+      operationId: obtainCategoryStatisticsDate
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain category statistics by date query
+
+  /category/{date}/{category}:
+    get:
+      tags:
+      - category
+      description: Obtain category statistics by date (in weekday-year-month-day format) and category name query
+      operationId: obtainCategoryStatisticsDateCategory
+      produces:
+      - application/json
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Obtain category statistics by date and category name query
+
+
+  /search:
+    get:
+      tags:
+      - search
+      description: Search news article
+      operationId: search
+      produces:
+      - application/json
+      parameters:
+      - name: "tag"
+        in: "query"
+        description: "Tag to filter by (comma delimiter)"
+        required: false
+        type: "string"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      - name: "category"
+        in: "query"
+        description: "Category to filter by (comma delimiter)"
+        required: false
+        type: "string"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      - name: "topic"
+        in: "query"
+        description: "Topic to filter by (comma delimiter)"
+        required: false
+        type: "string"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      - name: "category"
+        in: "query"
+        description: "Category to filter by (comma delimiter)"
+        required: false
+        type: "string"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      - name: "date"
+        in: "query"
+        description: "Date to filter by (in weekday-year-month-day format)"
+        required: false
+        type: "string"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          $ref: '#/definitions/Response'
+      summary: Search news article
+
+
+definitions:
+  Response:
+    type: object
+    properties:
+      isSuccess:
+        type: boolean
+        format: boolean
+      payload:
+        type: object
+        format: object
+      error:
+        $ref: '#/definitions/Error'
+
+  Error:
+    type: object
+    properties:
+      errorCode:
+        type: integer
+        format: integer
+      errorMessage:
+        type: string
+        format: string
+
+
+# Added by API Auto Mocking Plugin
+basePath: /
+schemes:
+ - https
+ - http

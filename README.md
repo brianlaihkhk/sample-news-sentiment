@@ -1,5 +1,5 @@
 # Coding sample
-Coding sample - News sentiment analysis - Submitted by Brian Lai
+Coding sample - News sentiment BI analysis - Submitted by Brian Lai
 
 ### Features
 
@@ -13,7 +13,7 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 -- Text mining, word sentiment mining based on news context
 -- Sentiment / metadata aggregation for BI analysis / reporting 
 
-- Analysis visualization
+- BI analysis visualization
 -- Provide popularity, topics, tags for user to select based on their interested area
 -- Flexibility on aggregated data roll-up / drill-down based on multiple dimensions (year / month / day / weekday / tag / category / sentiment / topic)
 -- User is able to search, obtain single piece of news and visualize metadata association
@@ -80,9 +80,9 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 -- /tag
 -- /tag/<date>
 -- /tag/<date>/<tag>
--- /topic
--- /topic/<date>
--- /topic/<date>/<topic>
+-- /sentiment
+-- /sentiment/<date>
+-- /sentiment/<date>/<sentiment>
 
 - Search
 -- /search
