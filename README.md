@@ -7,22 +7,22 @@ Coding sample - News sentiment BI analysis - Submitted by Brian Lai
 - Support non-AWS setup or AWS setup
 
 - ETL
--- Detect and scan news file. Provide delta / incremental scan feasibility using scanned file.
+   - Detect and scan news file. Provide delta / incremental scan feasibility using scanned file.
 
 - Data mining and analysis
--- Text mining, word sentiment mining based on news context
--- Sentiment / metadata aggregation for BI analysis / reporting 
+   - Text mining, word sentiment mining based on news context
+   - Sentiment / metadata aggregation for BI analysis / reporting 
 
 - BI analysis visualization
--- Provide popularity, topics, tags for user to select based on their interested area
--- Flexibility on aggregated data roll-up / drill-down based on multiple dimensions (year / month / day / weekday / tag / category / sentiment / topic)
--- User is able to search, obtain single piece of news and visualize metadata association
+   - Provide popularity, topics, tags for user to select based on their interested area
+   - Flexibility on aggregated data roll-up / drill-down based on multiple dimensions (year / month / day / weekday / tag / category / sentiment / topic)
+   - User is able to search, obtain single piece of news and visualize metadata association
 
 ### Framework 
 
 - TextBlob
--- Text-classification ML algorithm : Naive Bayes
--- NN / NNP extractor : Conll Extractor
+   - Text-classification ML algorithm : Naive Bayes
+   - NN / NNP extractor : Conll Extractor
 - sqlAlchemy
 - Flask
 
@@ -49,16 +49,21 @@ Coding sample - News sentiment BI analysis - Submitted by Brian Lai
    - AWS S3
    - AWS-cli or AWS CloudFormation
 
-   - For this project
-   -- AWS ECS / AWS EKS (or equivalent for docker hosting)
+   - [using SQL as OLAP]
+      - AWS Lambda (ETL script)
+      - AWS CloudWatch (AWS Lambda schedule job)
+      - AWS RDS MySQL (or equivalent for OLAP)
+      - AWS ECS or EKS (News reporting server)
+      - Serverless (Deployment of lambda script)
 
-   - For external BI reports
-   -- AWS Glue
-   -- AWS Redshift (For other BI reports integration)
+   - [using Data warehouse as OLAP]
+      - AWS Glue (ETL script)
+      - AWS Redshift (Data warehouse)
+      - AWS Quicksight (or equivalent for BI reporting)
 
 - [non-AWS solution]
-   - Docker (for Client + News module)
-   - MySQL / Oracle RDBMS (or other SQL database)
+   - Docker (for News reporting server)
+   - MySQL / Oracle RDBMS (or equivalent for OLAP)
    - (Optional) Docker swarm, Kubernetes or equivalent 
 
 ### URL request structure
@@ -66,26 +71,26 @@ Coding sample - News sentiment BI analysis - Submitted by Brian Lai
 - For further information please refer to Documentation folder
 
 - News
--- /news
--- /news/<category>
--- /news/<category>/<uuid>
+   - /news
+   - /news/<category>
+   - /news/<category>/<uuid>
 
 - Sentiment
--- /topic
--- /topic/<date>
--- /topic/<date>/<topic>
--- /category
--- /category/<date>
--- /category/<date>/<category>
--- /tag
--- /tag/<date>
--- /tag/<date>/<tag>
--- /sentiment
--- /sentiment/<date>
--- /sentiment/<date>/<sentiment>
+   - /topic
+   - /topic/<date>
+   - /topic/<date>/<topic>
+   - /category
+   - /category/<date>
+   - /category/<date>/<category>
+   - /tag
+   - /tag/<date>
+   - /tag/<date>/<tag>
+   - /sentiment
+   - /sentiment/<date>
+   - /sentiment/<date>/<sentiment>
 
 - Search
--- /search
+   - /search
 
 ### Technical Assessment Requirement
 

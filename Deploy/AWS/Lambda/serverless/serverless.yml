@@ -1,0 +1,66 @@
+service: news
+
+custom:
+  stage: ${self:provider.stage}
+  env: ${file(../resources/env-${self:provider.stage}.yml)}
+  encrypt: ${file(../resources/encrypt-${self:provider.stage}.yml)}
+  pythonRequirements:
+    dockerizePip: true
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 3
+#  scriptHooks:
+#    after:package:cleanup:
+#      - pip3 install -I -t build/ -r package.txt
+
+#* Create an optimized package for our functions
+package: 
+  individually: true
+
+provider:
+  name: aws
+  runtime: python3.8
+  stage: prd
+  region: ap-southeast-1
+
+plugins:
+  - serverless-python-requirements
+  - serverless-scriptable-plugin
+  - serverless-prune-plugin
+
+iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+      - "lambda:*"
+      - "apigateway:GET"
+      - "apigateway:PATCH"
+      - "apigateway:POST"
+      - "apigateway:PUT"
+      - "apigateway:DELETE"
+      - "logs:CreateLogGroup"
+      - "logs:CreateLogStream"
+      - "logs:PutLogEvents"
+    Resource: "*"
+
+functions:
+  etl:
+    name: order-order-${self:provider.stage}
+    handler: lambda_start.handle
+    timeout: 30
+    package: {}
+    environment:
+      RDS_HOST: ${self:custom.env.RDS_HOST}
+      RDS_USERNAME: ${self:custom.env.RDS_USERNAME}
+      RDS_PASSWORD: ${self:custom.env.RDS_PASSWORD}
+      RDS_DEFAULT_DB:  ${self:custom.env.RDS_DEFAULT_DB}
+      RDS_ENCRYPT_KEY:  ${self:custom.encrypt.RDS_ENCRYPT_KEY}
+      S3_SOURCE_FOLDER:  ${self:custom.encrypt.S3_SOURCE_FOLDER}
+      S3_TARGET_FOLDER:  ${self:custom.encrypt.S3_TARGET_FOLDER}
+    vpc:
+      securityGroupIds:
+      - ${self:custom.env.VPC_SECURITY_GROUP}
+      subnetIds:
+      - ${self:custom.env.VPC_SUBNET_A}
+      - ${self:custom.env.VPC_SUBNET_B}
+      - ${self:custom.env.VPC_SUBNET_C}
