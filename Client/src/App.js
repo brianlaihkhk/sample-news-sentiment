@@ -11,8 +11,10 @@ class App extends Component {
   state = {
     content : 'main',
     type : 'main',
-    url : null
+    url : '/',
+    selectWeekDay : null
   };
+
 
   handleCall = (e, url, method, request_header, successHandler, notSuccessHandler, successType) => {
     if (e != null) {
@@ -40,6 +42,26 @@ class App extends Component {
     this.setState({ content : payload , url: url, type : type });
   }
 
+  switchWeekDay = (e) => {
+    if (e.target.value !== 'Default' && this.state.url.indexOf('/-') > 0){
+      var switchDayUrl = this.state.url.replace('/-' , '/' + e.target.value + '-');
+      this.handleCall(null, switchDayUrl, "GET", null, this.updateMain, this.notSucessDisplayError, this.state.type);
+      this.setState({selectWeekDay : e.target.value});
+
+    } else if (e.target.value !== 'Default'){
+      var switchDayUrl = this.state.url.replace('/' + this.state.selectWeekDay + '-' , '/' + e.target.value + '-');
+      console.log(switchDayUrl);
+      this.handleCall(null, switchDayUrl, "GET", null, this.updateMain, this.notSucessDisplayError, this.state.type);
+      this.setState({selectWeekDay : e.target.value});
+
+    } else {
+      var switchDayUrl = this.state.url.replace('/' + this.state.selectWeekDay + '-', '/-');
+      this.handleCall(null, switchDayUrl, "GET", null, this.updateMain, this.notSucessDisplayError, this.state.type);
+      this.setState({selectWeekDay : null});
+
+    }
+  }
+
   exceptionHandler = (err) => {
     console.log("exceptionHandler");
     console.log(err);
@@ -57,7 +79,7 @@ class App extends Component {
       <div className="main__wrap">
         <main className="container">
           <div className="header">
-              <SelectMenu handle={this.handleCall} updateMain={this.updateMain} defaultError={this.notSucessDisplayError} />
+              <SelectMenu handle={this.handleCall} updateMain={this.updateMain} defaultError={this.notSucessDisplayError} switchWeekDay={this.switchWeekDay} />
           </div>
           <div className="wrapper clearfix">
             <div className="section">

@@ -4,7 +4,7 @@ import yaml
 import sys
 import traceback
 import response
-from misc import load_env
+from misc import load_options
 from flask import Flask, request
 from flask_cors import CORS
 from handler import Handler
@@ -121,7 +121,7 @@ def handle_error(e):
     return response.failure("Request failed")
 
 if __name__ == "__main__":
-    load_env(sys.argv[1])
+    load_options(sys.argv[1:])
     db = Database(app).db
     request_handler = Handler(db)
-    app.run(host='127.0.0.1', port=8000)
+    app.run(host=os.environ['SERVER_HOST'], port=int(os.environ['SERVER_PORT']))

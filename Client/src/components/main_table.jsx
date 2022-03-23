@@ -9,14 +9,14 @@ class MainTable extends Component {
         this.defaultError = props.defaultError;
     }
 
-
+ 
     dataClick = (e, type, year, month, day, weekDay, spec) => {
         var date_query = (weekDay ? weekDay : "" ) + "-" + (year ? year : "" ) + "-" + (month ? month : "" ) + "-" + (day ? day : "" )
 
         if (spec){
-            this.handle(null, "/" + type + "/" + date_query + "/" + spec, "GET", null, this.updateMain, this.defaultError, type)  
+            this.handle(null, "/" + type + "/" + date_query + "/" + spec, "GET", null, this.updateMain, this.defaultError, type);
         } else {
-            this.handle(null, "/" + type + "/" + date_query, "GET", null, this.updateMain, this.defaultError, type) 
+            this.handle(null, "/" + type + "/" + date_query, "GET", null, this.updateMain, this.defaultError, type);
         }
     }
 
@@ -45,7 +45,7 @@ class MainTable extends Component {
         return {'year' : spec[1], 'month' : spec[2], 'day' : spec[3] , 'week_day' : spec[0]}
     }
 
-    getTableBody = (content, type, url) => {
+    getTableBody = (content, type, url, selectWeekDay) => {
 
         var output = [];
         var urlSplit = url.substring(0, url.indexOf('?')).split('/');
@@ -60,21 +60,21 @@ class MainTable extends Component {
                 var value = item[1];
 
                 if (type === 'news' && key === 'year'){
-                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, 'category', row['year'], null, null, null, null)}>{value}</a></span></td>);
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, 'category', row['year'], null, null, selectWeekDay, null)}>{value}</a></span></td>);
                 } else if (type === 'news'){
-                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.searchClick(e, 'date', row['year'], null, null, null, value)}>{value}</a></span></td>);
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.searchClick(e, 'date', row['year'], null, null, selectWeekDay, null)}>{value}</a></span></td>);
                 } else if (key === 'year'){
-                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], null, null, null, null )}>{value}</a></span></td>);
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], null, null, selectWeekDay, null )}>{value}</a></span></td>);
                 } else if (key === 'month'){
-                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], row['month'], null, null, null )}>{value}</a></span></td>);
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], row['month'], null, selectWeekDay, null )}>{value}</a></span></td>);
                 } else if (key === 'day'){
-                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], row['month'], row['day'], null, null )}>{value}</a></span></td>);
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], row['month'], row['day'], selectWeekDay, null )}>{value}</a></span></td>);
                 } else if (key === 'week_day'){
-                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], row['month'], row['day'], row['week_day'], null )}>{value}</a></span></td>);
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], row['month'], row['day'], selectWeekDay, null )}>{value}</a></span></td>);
                 } else if (key === 'category' || key === 'topic' || key === 'tag' || key === 'sentiment' ){
-                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], row['month'], row['day'], row['week_day'], value )}>{value}</a></span></td>);
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.dataClick(e, type, row['year'], row['month'], row['day'], selectWeekDay, value )}>{value}</a></span></td>);
                 } else if (key === 'news_count' ){
-                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.searchClick(e, type, row['year'], row['month'], row['day'], row['week_day'], row[type])}>{value}</a></span></td>);
+                    outputRow.push(<td className="main_table"><span><a href='#' onClick={(e) => this.searchClick(e, type, row['year'], row['month'], row['day'], selectWeekDay, row[type])}>{value}</a></span></td>);
                 } else{
                     outputRow.push(<td className="main_table"><span>{value}</span></td>);
                 }
@@ -88,13 +88,12 @@ class MainTable extends Component {
     };
 
     render() {
-        const {content, type, url} = this.props; 
+        const {content, type, url, selectWeekDay} = this.props; 
 
         var header = this.getTableHeader(content);
-        var body = this.getTableBody(content, type, url);
+        var body = this.getTableBody(content, type, url, selectWeekDay);
         return (
             <div className="wrapper">
-                Listing {url} :
                 <table className="main_table">
                     <thead>
                         <tr className="main_table">

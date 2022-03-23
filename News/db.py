@@ -5,9 +5,8 @@ import os
 
 class Database:
     def __init__(self, app):
-        print(os.environ['RDS_USERNAME'])
         # Obtain encrypt key
-        encrypt_key = str(os.environ['RDS_ENCRYPT_KEY']).encode() if 'RDS_ENCRYPT_KEY' in os.environ else None
+        encrypt_key = str(os.environ['RDS_ENCRYPT_KEY']).encode() if ('RDS_ENCRYPT_KEY' in os.environ and os.environ['RDS_ENCRYPT_KEY'] ) else None
         env_username = os.environ['RDS_USERNAME']
         env_password = os.environ['RDS_PASSWORD']
 

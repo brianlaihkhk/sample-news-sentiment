@@ -1,5 +1,5 @@
 # Coding sample
-Coding sample - News sentiment analysis - Submitted by Brian Lai
+Coding sample - News sentiment BI analysis - Submitted by Brian Lai
 
 ### Features
 
@@ -7,22 +7,22 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 - Support non-AWS setup or AWS setup
 
 - ETL
-   - Detect and scan news file. Provide delta / incremental scan feasibility using scanned file.
+-- Detect and scan news file. Provide delta / incremental scan feasibility using scanned file.
 
 - Data mining and analysis
-   - Text mining, word sentiment mining based on news context
-   - Sentiment / metadata aggregation for BI analysis / reporting 
+-- Text mining, word sentiment mining based on news context
+-- Sentiment / metadata aggregation for BI analysis / reporting 
 
-- Analysis visualization
-   - Provide popularity, topics, tags for user to select based on their interested area
-   - Flexibility on aggregated data roll-up / drill-down based on multiple dimensions (year / month / day / weekday / tag / category / sentiment / topic)
-    User is able to search, obtain single piece of news and visualize metadata association
+- BI analysis visualization
+-- Provide popularity, topics, tags for user to select based on their interested area
+-- Flexibility on aggregated data roll-up / drill-down based on multiple dimensions (year / month / day / weekday / tag / category / sentiment / topic)
+-- User is able to search, obtain single piece of news and visualize metadata association
 
 ### Framework 
 
 - TextBlob
-   - Text-classification ML model : Naive Bayes
-   - NN / NNP extractor : Conll Extractor
+-- Text-classification ML algorithm : Naive Bayes
+-- NN / NNP extractor : Conll Extractor
 - sqlAlchemy
 - Flask
 
@@ -30,12 +30,14 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 
 - Sample : Massaged news for ETL (BBC news, check below Remarks)
 - ETL : ETL script to extract massaged news, generate metadata, aggregate data for OLAP
-- Documentation : Documentation
 - Deploy : Deployment script
-- News : Backend server for sentiment analysis, UI request handling
-- Client : Frontend UI for sentiment analysis
+- News : Reporting engine for Client UI
+- Client : UI for sentiment analysis
+- Unit Test : Unit testing script
 - Tools : Tools for encryption, encoding and local server script for testing
 - Setup : Setup script for database initialization
+- Documentation : Documentation
+- Screenshot : Application screenshots
 
 ### Prerequsite
 
@@ -48,11 +50,11 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
    - AWS-cli or AWS CloudFormation
 
    - For this project
-      - AWS ECS / AWS EKS (or equivalent for docker hosting)
+   -- AWS ECS / AWS EKS (or equivalent for docker hosting)
 
    - For external BI reports
-      - AWS Glue
-      - AWS Redshift (For other BI reports integration)
+   -- AWS Glue
+   -- AWS Redshift (For other BI reports integration)
 
 - [non-AWS solution]
    - Docker (for Client + News module)
@@ -64,26 +66,26 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 - For further information please refer to Documentation folder
 
 - News
-   - /news
-   - /news/`category`
-   - /news/`category`/`uuid`
+-- /news
+-- /news/<category>
+-- /news/<category>/<uuid>
 
 - Sentiment
-   - /topic
-   - /topic/`date`
-   - /topic/`date`/`topic`
-   - /category
-   - /category/`date`
-   - /category/`date`/`category`
-   - /tag
-   - /tag/`date`
-   - /tag/`date`/`category`
-   - /topic
-   - /topic/`date`
-   - /topic/`date`/`category`
+-- /topic
+-- /topic/<date>
+-- /topic/<date>/<topic>
+-- /category
+-- /category/<date>
+-- /category/<date>/<category>
+-- /tag
+-- /tag/<date>
+-- /tag/<date>/<tag>
+-- /sentiment
+-- /sentiment/<date>
+-- /sentiment/<date>/<sentiment>
 
 - Search
-   - /search
+-- /search
 
 ### Technical Assessment Requirement
 
@@ -105,7 +107,7 @@ Coding sample - News sentiment analysis - Submitted by Brian Lai
 - Using cryptography / cryptocode / simple-crypt will show **invalid elf header** in AWS Lambda (Under osx development). This project will use JWT for configuration encryption and decryption.
 - There is no news scraping script included in this project. You can create automated news scraping task using AWS EventBridge or equivalent.
 - This project does not provide BI reports for aggregated data navigation and data analysis.
-- Regarding to the news source, there are various examples you can find online. For example, you can select all-in-one local news consolidation tools like https://hknews.dev (Source : https://github.com/ayltai/hknews).
+- Regarding to the news source, there are various examples you can find online. For example, you can select all-in-one local news consolidation tools like https://hknews.dev (Source : https://github.com/ayltai/hknews) 
 
 ### Contact
 - Linkedin : https://linkedin.com/in/brianlaihkhk/
