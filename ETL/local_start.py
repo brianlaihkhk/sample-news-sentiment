@@ -11,8 +11,7 @@ class NoAliasDumper(yaml.SafeDumper):
         return True
 
 class FileContext:
-    def __init__(self, path, category):
-        self.sqlProcess = SqlProcess(path, category)
+    def __init__(self):
         self.scanned = os.environ['SCANNED_FILE']
         self.start_folder = os.environ['SCAN_FOLDER']
 
@@ -21,17 +20,21 @@ class FileContext:
             self.process(folder , os.path.basename(folder))
 
     def process(self, path, category):
+        process = SqlProcess(path, category)
+
         file_list = list(set(self.get_file_list(path)) - set(self.get_scanned_file(self.scanned)))
         for context in file_list :
-            context_list = [ Etl(context, self.sqlProcess.get_random_date(), self.get_context(context), category) ]
+            context_list = [ Etl(context, process.get_random_date(), self.get_context(context), category) ]
             aggregates = Aggregate(context_list)
-            self.sqlProcess.process_news(context_list)
-            self.sqlProcess.process_aggregate_category(aggregates.aggregate_category(context_list))
-            self.sqlProcess.process_aggregate_sentiment(aggregates.aggregate_sentiment(context_list))
-            self.sqlProcess.process_aggregate_topic(aggregates.aggregate_topic(context_list))
-            self.sqlProcess.process_aggregate_tags(aggregates.aggregate_tags(context_list))
+            process.process_news(context_list)
+            process.process_aggregate_category(aggregates.aggregate_category(context_list))
+            process.process_aggregate_sentiment(aggregates.aggregate_sentiment(context_list))
+            process.process_aggregate_topic(aggregates.aggregate_topic(context_list))
+            process.process_aggregate_tags(aggregates.aggregate_tags(context_list))
             self.save_scanned_file(self.scanned, [ context ])
-
+            logging.info('Processed : ' + context)
+            print('Processed : ' + context)
+            
     def get_context(self, path):
         lines = ['', '']
         with open(path) as f:
