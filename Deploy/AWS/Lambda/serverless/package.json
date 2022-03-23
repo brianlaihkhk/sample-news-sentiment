@@ -1,0 +1,14 @@
+{
+  "name": "order",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Can run\" && exit 0"
+  },
+  "dependencies": {
+    "serverless": "^1.73.1",
+    "serverless-prune-plugin": "^1.4.3",
+    "serverless-python-requirements": "^5.1.0",
+    "serverless-scriptable-plugin": "^1.0.5"
+  }
+}

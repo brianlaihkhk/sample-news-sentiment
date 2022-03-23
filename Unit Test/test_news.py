@@ -1,6 +1,10 @@
 import unittest
 import json
-from misc import load_env
+from misc import load_options
+import sys
+import os
+
+sys.path.append(os.path.abspath('../News'))
 
 class TestNews(unittest.TestCase):
     event = {}
@@ -12,5 +16,5 @@ class TestNews(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    load_env("../News/.env.dev")
+    load_options("../News/.env.dev")
     unittest.main()

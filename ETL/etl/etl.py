@@ -1,4 +1,4 @@
-from analysis import Analysis
+from etl.analysis import Analysis
 import time
 import re
 
