@@ -72,22 +72,22 @@ Coding sample - News sentiment BI analysis - Submitted by Brian Lai
 
 - News
    - /news
-   - /news/<category>
-   - /news/<category>/<uuid>
+   - /news/`category`
+   - /news/`category`/`uuid`
 
 - Sentiment
    - /topic
-   - /topic/<date>
-   - /topic/<date>/<topic>
+   - /topic/`date`
+   - /topic/`date`/`topic`
    - /category
-   - /category/<date>
-   - /category/<date>/<category>
+   - /category/`date`
+   - /category/`date`/`category`
    - /tag
-   - /tag/<date>
-   - /tag/<date>/<tag>
+   - /tag/`date`
+   - /tag/`date`/`tag`
    - /sentiment
-   - /sentiment/<date>
-   - /sentiment/<date>/<sentiment>
+   - /sentiment/`date`
+   - /sentiment/`date`/`sentiment`
 
 - Search
    - /search
