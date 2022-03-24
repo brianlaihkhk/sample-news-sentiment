@@ -59,6 +59,7 @@ Coding sample - News sentiment BI analysis - Submitted by Brian Lai
    - AWS VPC (Network connection capability)
    - AWS S3
    - AWS-cli or AWS CloudFormation
+   - npm, pip3
 
    - [using SQL as OLAP]
       - AWS Lambda (ETL script)
@@ -74,6 +75,7 @@ Coding sample - News sentiment BI analysis - Submitted by Brian Lai
 
 - [non-AWS solution]
    - Docker (for News reporting server)
+   - npm, pip3
    - MySQL / Oracle RDBMS (or equivalent for OLAP)
    - (Optional) Docker swarm, Kubernetes or equivalent 
 
