@@ -40,7 +40,7 @@ class Handler():
             filter['DATE'] = str(week_data[1]) + str(week_data[2]) + "%"
             filter['YEAR'] = str(week_data[1])
             filter['MONTH'] = str(week_data[2])
-        elif len(week_data) == 4 and str(week_data[1]):
+        elif len(week_data) == 4 and str(week_data[1]) and not str(week_data[3]):
             filter['DATE'] = str(week_data[1]) + "%"
             filter['YEAR'] = str(week_data[1])
         elif len(week_data) == 4 and not str(week_data[3]) and not str(week_data[2]) and not str(week_data[1]) :

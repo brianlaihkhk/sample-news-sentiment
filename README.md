@@ -20,11 +20,22 @@ Coding sample - News sentiment BI analysis - Submitted by Brian Lai
 
 ### Framework 
 
-- TextBlob
-   - Text-classification ML algorithm : Naive Bayes
-   - NN / NNP extractor : Conll Extractor
-- sqlAlchemy
-- Flask
+- [ETL (Sentiment extraction)]
+   - TextBlob
+      - Text-classification ML algorithm : Naive Bayes
+      - NN / NNP extractor : Conll Extractor
+   - sqlAlchemy
+   - boto3
+   - unittest
+
+- [Client (BI report UI)]
+   - native-script for jest
+   - babel / eslint for jsx
+
+- [News (BI reporting server)]
+   - sqlAlchemy
+   - Flask
+   - unittest
 
 ### Folder
 

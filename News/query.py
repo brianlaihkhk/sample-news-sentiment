@@ -289,7 +289,7 @@ class Query:
             key.append('topic')
             require_base = False
 
-        if require_base: # and (not (criteria.get('DATE') or criteria.get('DAY') or criteria.get('WEEK_DAY'))):
+        if require_base:
             group_by.append(base_column)
             with_entities.append(base_column)
             key.append(base_key)
