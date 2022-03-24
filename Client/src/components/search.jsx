@@ -91,7 +91,7 @@ class Search extends Component {
                 <button onClick={this.submitCriteria} >Search</button> <button onClick={this.resetCriteria} >Reset</button>
                 <hr />
                 <p>Current Search Criteria :</p>
-                <p>{currentCriteria}</p>
+                {currentCriteria}
             </div>
             
         );
