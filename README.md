@@ -14,8 +14,8 @@ Coding sample - News sentiment BI analysis - Submitted by Brian Lai
    - Sentiment / metadata aggregation for BI analysis / reporting 
 
 - BI analysis visualization
-   - Provide popularity, topics, tags for user to select based on their interested area
-   - Flexibility on aggregated data roll-up / drill-down based on multiple dimensions (year / month / day / weekday / tag / category / sentiment / topic)
+   - Provide sentiment, topics, tags for user to select based on their interested area
+   - Flexibility on aggregated data roll-up / drill-down based on multiple dimensions ( year / month / day / weekday / tag / category / sentiment / topic )
    - User is able to search, obtain single piece of news and visualize metadata association
 
 ### Framework 
