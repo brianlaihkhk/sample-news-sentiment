@@ -7,7 +7,8 @@ Coding sample - News sentiment BI analysis - Submitted by Brian Lai
 - Support non-AWS setup or AWS setup
 
 - ETL
-   - Detect and scan news file. Provide delta / incremental scan feasibility using scanned file.
+   - Detect and scan news file
+   - Provide delta / incremental scan feasibility using scanned file
 
 - Data mining and analysis
    - Text mining, word sentiment mining based on news context
