@@ -27,13 +27,9 @@ case "$2" in
         if [[ $3 -eq "all" ]]
         then
             serverless deploy function --function etl
-            serverless deploy function --function news
         elif [[ $3 -eq "etl" ]]
         then
             serverless deploy function --function etl
-        elif [[ $3 -eq "news" ]]
-        then
-            serverless deploy function --function news
         else
             serverless $1 $2 $3 $4 $5 
         fi

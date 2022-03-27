@@ -69,9 +69,9 @@ Coding sample - News sentiment BI analysis - Submitted by Brian Lai
       - Serverless (Deployment of lambda script)
 
    - [using Data warehouse as OLAP]
-      - AWS Glue (ETL script)
+      - AWS Glue (MySQL / RDBMS -> Redshift)
       - AWS Redshift (Data warehouse)
-      - AWS Quicksight (or equivalent for BI reporting)
+      - AWS Quicksight (or equivalent for other BI reporting)
 
 - [non-AWS solution]
    - Docker (for News reporting server)
